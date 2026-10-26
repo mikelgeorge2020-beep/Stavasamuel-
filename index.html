@@ -1,14 +1,16 @@
-<!DOCTYPE html><html dir="rtl" lang="ar"><head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>النظام المالي والمحاسبي الموحد - كنيسة الأنبا صموئيل المعترف</title>
-<link href="https://fonts.googleapis.com" rel="preconnect">
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&amp;family=Noto+Sans+Arabic:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&amp;family=Noto+Sans+Arabic:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-<link href="/manifest.json" rel="manifest">
-<meta content="#0f172a" name="theme-color">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+<link href="/manifest.json" rel="manifest"/>
+<meta content="#0f172a" name="theme-color"/>
 <style>
     body { font-family: 'Cairo', 'Noto Sans Arabic', sans-serif; background-color: #0b1120; }
     .card-hover { transition: all 0.25s ease; }
@@ -56,7 +58,7 @@
 </button>
 <button class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 flex items-center gap-1.5 transition" onclick="toggleView('login')" title="تبديل الخادم / تسجيل الخروج">
 <i class="fa-solid fa-user-gear text-amber-400"></i>
-<span id="current-servant-name" class="">تسجيل الدخول</span>
+<span class="" id="current-servant-name">تسجيل الدخول</span>
 </button>
 </div>
 </div>
@@ -76,98 +78,114 @@
 <span class="">بوابة دخول الخدام وأمناء العهد</span>
 </div>
 <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight" id="login-card-title">تسجيل دخول خادم</h2>
-<p class="text-xs text-slate-400 mt-1">منظومة الإدارة المالية واللوجستية الموحدة — كنيسة الأنبا صموئيل المعترف</p>
+<p class="text-xs text-slate-400 mt-1" id="login-card-desc">منظومة الإدارة المالية واللوجستية الموحدة — كنيسة الأنبا صموئيل المعترف</p>
 </div>
-
 <!-- شريط التبديل بين تسجيل الدخول وتسجيل خادم جديد -->
 <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center mb-6 relative">
-<button type="button" id="tab-auth-login-btn" onclick="switchAuthTab('login')" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 bg-amber-500 text-slate-950 shadow">
+<button class="flex-1 py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 bg-amber-500 text-slate-950 shadow" id="tab-auth-login-btn" onclick="switchAuthTab('login')" type="button">
 <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
 <span class="">تسجيل دخول خادم</span>
 </button>
-<button type="button" id="tab-auth-register-btn" onclick="switchAuthTab('register')" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white">
-<i class="fa-solid fa-user-gear text-xs"></i>
+<button class="flex-1 py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white" id="tab-auth-register-btn" onclick="switchAuthTab('register')" type="button">
+<i class="fa-solid fa-user-plus text-xs"></i>
 <span class="">تسجيل بيانات خادم جديد</span>
 </button>
 </div>
-
 <!-- نموذج تسجيل الدخول الحالي -->
-<form id="auth-login-form" class="space-y-4 relative" onsubmit="handleAuthLoginSubmit(event)">
+<form class="space-y-4 relative" id="auth-login-form" onsubmit="handleAuthLoginSubmit(event)">
 <div>
 <label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
 <i class="fa-solid fa-user text-amber-400"></i>
 <span class="">رقم الهاتف أو اسم الخادم</span>
 </label>
-<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" id="auth-login-identifier" placeholder="اكتب اسمك الثلاثي أو رقم الموبايل" required="" type="text">
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" id="auth-login-identifier" placeholder="اكتب اسمك الثلاثي أو رقم الموبايل" required="" type="text"/>
 </div>
 <div>
 <label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
 <i class="fa-solid fa-lock text-amber-400"></i>
-<span class="">كلمة المرور / كود الخادم السري</span>
+<span class="">كود المرور السري / كلمة المرور</span>
 </label>
-<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition font-mono" id="auth-login-pass" placeholder="••••••••" required="" type="password">
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition font-mono" id="auth-login-pass" placeholder="••••••••" required="" type="password"/>
 </div>
 <div class="pt-2">
 <button class="w-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-[0.99] transition cursor-pointer" type="submit">
 <i class="fa-solid fa-arrow-right-to-bracket text-base"></i>
-<span class="">دخول لوحة التحكم</span>
+<span class="">دخول لوحة التحكم والبدء</span>
 </button>
 </div>
 <div class="text-center pt-2">
+<button class="text-xs text-amber-400 hover:text-amber-300 underline font-semibold transition" onclick="switchAuthTab('register')" type="button">
+ليس لديك حساب؟ تسجيل بيانات خادم جديد
+</button>
+</div>
+<div class="text-center pt-1">
 <p class="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
 <i class="fa-solid fa-lock text-slate-600"></i>
 <span class="">جلسة آمنة ومحفوظة محلياً على هذا الجهاز بنسبة 100%</span>
 </p>
 </div>
 </form>
-
 <!-- نموذج تسجيل خادم جديد -->
-<form id="auth-register-form" class="hidden space-y-3.5 relative" onsubmit="handleAuthRegisterSubmit(event)">
+<form class="hidden space-y-3.5 relative" id="auth-register-form" onsubmit="handleAuthRegisterSubmit(event)">
 <div>
 <label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
 <i class="fa-solid fa-user text-amber-400"></i>
 <span class="">اسم الخادم ثلاثي</span>
 </label>
-<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" id="reg-name" placeholder="مثال: د. ميخائيل جورج فرج" required="" type="text">
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" id="reg-name" placeholder="مثال: د. ميخائيل جورج فرج" required="" type="text"/>
 </div>
 <div>
 <label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
 <i class="fa-brands fa-whatsapp text-emerald-400"></i>
-<span class="">رقم الهاتف للتواصل (WhatsApp)</span>
+<span class="">رقم الهاتف / واتساب</span>
 </label>
-<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-left transition font-mono" dir="ltr" id="reg-phone" placeholder="01xxxxxxxxx" required="" type="tel">
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-left transition font-mono" dir="ltr" id="reg-phone" placeholder="01xxxxxxxxx" required="" type="tel"/>
 </div>
 <div>
 <label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
 <i class="fa-solid fa-layer-group text-blue-400"></i>
-<span class="">القسم التابع له أو الصلاحية</span>
+<span class="">القسم المسؤول عنه أو الصلاحية</span>
 </label>
 <select class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" id="reg-sector">
-<option value="library">1. مكتبة الكنيسة ومنافذ بيع الكتب</option>
-<option value="buses">2. قطاع الأتوبيسات والرحلات الديرية</option>
-<option value="farm">3. مزرعة بركة صموئيل للدواجن والبيض</option>
-<option value="garments">4. مصنع وتطريز الملابس الكنسية</option>
-<option value="canteen">5. كانتين الكنيسة وقاعة الضيافة</option>
-<option value="elderly">6. دار القديسين لرعاية المسنين</option>
-<option value="special_needs">7. مركز الرجاء لذوي الاحتياجات الخاصة</option>
-<option value="hall">8. قاعة المناسبات واستقبالات الأفراح</option>
+<option value="library">مكتبة الكنيسة ومنافذ بيع الكتب</option>
+<option value="buses">قطاع الأتوبيسات والرحلات الديرية</option>
+<option value="farm">مزرعة بركة صموئيل للدواجن والبيض</option>
+<option value="garments">مصنع وتطريز الملابس الكنسية</option>
+<option value="canteen">كانتين الكنيسة وقاعة الضيافة</option>
+<option value="elderly">دار القديسين لرعاية المسنين</option>
+<option value="special_needs">مركز الرجاء لذوي الاحتياجات الخاصة</option>
+<option value="hall">قاعة المناسبات واستقبالات الأفراح</option>
 <option value="all">كافة الأقسام (أمين الصندوق العام / المشرف العام)</option>
 </select>
 </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 <div>
 <label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
 <i class="fa-solid fa-lock text-amber-400"></i>
-<span class="">كود سري / كلمة مرور لتأكيد التسجيل</span>
+<span class="">كود المرور / كلمة السر</span>
 </label>
-<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition font-mono" id="reg-pass" placeholder="اختر كوداً أو كلمة مرور" required="" type="password">
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition font-mono" id="reg-pass" placeholder="اختر كوداً أو كلمة سر" required="" type="password"/>
+</div>
+<div>
+<label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
+<i class="fa-solid fa-check-double text-amber-400"></i>
+<span class="">تأكيد كود المرور</span>
+</label>
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition font-mono" id="reg-pass-confirm" placeholder="أعد إدخال الكود" required="" type="password"/>
+</div>
 </div>
 <div class="pt-2">
-<button class="w-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-[0.99] transition cursor-pointer" type="submit">
-<i class="fa-solid fa-plus-circle text-base"></i>
-<span class="">إنشاء الحساب ودخول لوحة التحكم</span>
+<button class="w-full bg-gradient-to-r from-emerald-500 via-amber-500 to-amber-400 hover:from-emerald-400 hover:to-amber-300 text-slate-950 font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-[0.99] transition cursor-pointer" type="submit">
+<i class="fa-solid fa-user-check text-base"></i>
+<span class="">تسجيل بيانات الخادم والبدء الآن</span>
 </button>
 </div>
 <div class="text-center pt-2">
+<button class="text-xs text-amber-400 hover:text-amber-300 underline font-semibold transition" onclick="switchAuthTab('login')" type="button">
+لديك حساب بالفعل؟ تسجيل الدخول
+</button>
+</div>
+<div class="text-center pt-1">
 <p class="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
 <i class="fa-solid fa-shield-halved text-slate-600"></i>
 <span class="">يتم حفظ بيانات الخادم محلياً وتفعيل الصلاحيات المحددة فوراً</span>
@@ -346,15 +364,15 @@
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">الكمية المباعة</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-qty" min="1" oninput="calculateInvoiceTotal()" type="number" value="1">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-qty" min="1" oninput="calculateInvoiceTotal()" type="number" value="1"/>
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">سعر الوحدة (ج.م)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-price" min="0" oninput="calculateInvoiceTotal()" type="number" value="0">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-price" min="0" oninput="calculateInvoiceTotal()" type="number" value="0"/>
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">خصم نقدي (ج.م - اختياري)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-discount" min="0" oninput="calculateInvoiceTotal()" type="number" value="0">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-discount" min="0" oninput="calculateInvoiceTotal()" type="number" value="0"/>
 </div>
 <div class="sm:col-span-2 lg:col-span-4 pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
 <div class="text-xs">
@@ -383,15 +401,15 @@
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">الكمية المضافة للمخزن</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-indigo-500" id="purchase-qty" min="1" required="" type="number" value="10">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-indigo-500" id="purchase-qty" min="1" required="" type="number" value="10"/>
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">سعر شراء الوحدة (التكلفة)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-indigo-500" id="purchase-cost" min="0" required="" type="number" value="50">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-indigo-500" id="purchase-cost" min="0" required="" type="number" value="50"/>
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">اسم المورد / إذن الاستلام</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500" id="purchase-supplier" placeholder="مثال: مطبعة الدير / مورد البيض" type="text">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500" id="purchase-supplier" placeholder="مثال: مطبعة الدير / مورد البيض" type="text"/>
 </div>
 <div class="sm:col-span-2 lg:col-span-4 pt-3 border-t border-slate-800 flex justify-end">
 <button class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition" type="submit">
@@ -497,26 +515,26 @@
 </div>
 <div>
 <label class="block text-xs text-slate-300 mb-1">اسم الصنف الجديد</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-500" id="modal-item-name" placeholder="مثال: كرتونة بيض مائدة أحمر سوبر أو أجبية وسط" required="" type="text">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-500" id="modal-item-name" placeholder="مثال: كرتونة بيض مائدة أحمر سوبر أو أجبية وسط" required="" type="text"/>
 </div>
 <div class="grid grid-cols-2 gap-3">
 <div>
 <label class="block text-xs text-slate-300 mb-1">الوحدة</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-unit" type="text" value="قطعة">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-unit" type="text" value="قطعة"/>
 </div>
 <div>
 <label class="block text-xs text-slate-300 mb-1">رصيد أول المدة (الكمية)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-qty" min="0" required="" type="number" value="100">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-qty" min="0" required="" type="number" value="100"/>
 </div>
 </div>
 <div class="grid grid-cols-2 gap-3">
 <div>
 <label class="block text-xs text-slate-300 mb-1">سعر التكلفة (ج.م)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-cost" min="0" required="" type="number" value="45">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-cost" min="0" required="" type="number" value="45"/>
 </div>
 <div>
 <label class="block text-xs text-slate-300 mb-1">سعر البيع الافتراضي (ج.م)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-price" min="0" required="" type="number" value="65">
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-price" min="0" required="" type="number" value="65"/>
 </div>
 </div>
 <button class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 mt-2 transition" type="submit">
@@ -544,6 +562,8 @@
     ];
 
     const STORE_KEY = 'church_samuel_v3_store';
+    const SERVANTS_KEY = 'church_samuel_servants_list';
+
     function getStore() {
       const saved = localStorage.getItem(STORE_KEY);
       if (saved) {
@@ -587,10 +607,107 @@
 
     let state = getStore();
 
+    function getServants() {
+      const saved = localStorage.getItem(SERVANTS_KEY);
+      if (saved) {
+        try { return JSON.parse(saved); } catch(e) {}
+      }
+      return [
+        { name: 'د. ميخائيل جورج فرج', phone: '01234567890', sector: 'library', pass: '1234' }
+      ];
+    }
+
     function saveStore() {
       localStorage.setItem(STORE_KEY, JSON.stringify(state));
       renderAll();
     }
+
+    // التبديل بين تبويبات المصادقة (تسجيل دخول خادم / تسجيل بيانات خادم جديد)
+    window.switchAuthTab = function(mode) {
+      const btnLogin = document.getElementById('tab-auth-login-btn');
+      const btnReg = document.getElementById('tab-auth-register-btn');
+      const formLogin = document.getElementById('auth-login-form');
+      const formReg = document.getElementById('auth-register-form');
+      const title = document.getElementById('login-card-title');
+      const desc = document.getElementById('login-card-desc');
+
+      if (mode === 'login') {
+        btnLogin.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 bg-amber-500 text-slate-950 shadow';
+        btnReg.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white';
+        formLogin.classList.remove('hidden');
+        formReg.classList.add('hidden');
+        title.innerText = 'تسجيل دخول خادم';
+        desc.innerText = 'منظومة الإدارة المالية واللوجستية الموحدة — كنيسة الأنبا صموئيل المعترف';
+      } else {
+        btnReg.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 bg-amber-500 text-slate-950 shadow';
+        btnLogin.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white';
+        formReg.classList.remove('hidden');
+        formLogin.classList.add('hidden');
+        title.innerText = 'تسجيل بيانات خادم جديد';
+        desc.innerText = 'فتح حساب خادم معتمد وتحديد القسم التابع له والصلاحيات';
+      }
+    };
+
+    // معالجة تسجيل الدخول
+    window.handleAuthLoginSubmit = function(e) {
+      e.preventDefault();
+      const identifier = document.getElementById('auth-login-identifier').value.trim();
+      const pass = document.getElementById('auth-login-pass').value.trim();
+
+      if (!identifier) {
+        alert('يرجى إدخال اسم الخادم أو رقم الهاتف');
+        return;
+      }
+
+      const servants = getServants();
+      const matched = servants.find(s => (s.phone === identifier || s.name === identifier) && (!s.pass || s.pass === pass));
+
+      const servantName = matched ? matched.name : identifier;
+      const targetSector = matched && matched.sector !== 'all' ? matched.sector : state.activeSectorId;
+
+      state.currentServant = servantName;
+      if (state.sectors[targetSector]) {
+        state.activeSectorId = targetSector;
+      }
+
+      document.getElementById('current-servant-name').innerText = servantName;
+      saveStore();
+      toggleView('dashboard');
+    };
+
+    // معالجة تسجيل خادم جديد
+    window.handleAuthRegisterSubmit = function(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const sector = document.getElementById('reg-sector').value;
+      const pass = document.getElementById('reg-pass').value.trim();
+      const passConfirm = document.getElementById('reg-pass-confirm').value.trim();
+
+      if (!name || !phone) {
+        alert('يرجى ملء كافة البيانات المطلوبة.');
+        return;
+      }
+
+      if (pass !== passConfirm) {
+        alert('عفواً، كود المرور غير متطابق مع كود التأكيد!');
+        return;
+      }
+
+      const servants = getServants();
+      servants.push({ name, phone, sector, pass });
+      localStorage.setItem(SERVANTS_KEY, JSON.stringify(servants));
+
+      state.currentServant = name;
+      if (sector !== 'all' && state.sectors[sector]) {
+        state.activeSectorId = sector;
+      }
+
+      document.getElementById('current-servant-name').innerText = name;
+      saveStore();
+      alert(`مرحباً بك يا أستاذ/د. ${name}، تم تسجيل بياناتك بنجاح وتفعيل صلاحياتك.`);
+      toggleView('dashboard');
+    };
 
     // تنزيل ملف الكود كاملاً ومباشرة
     window.downloadSelf = function() {
@@ -618,21 +735,6 @@
         dashEl.classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    };
-
-    window.handleLogin = function(e) {
-      e.preventDefault();
-      const name = document.getElementById('login-name').value.trim();
-      const sector = document.getElementById('login-sector').value;
-      if (!name) return;
-
-      state.currentServant = name;
-      if (sector !== 'all' && state.sectors[sector]) {
-        state.activeSectorId = sector;
-      }
-      document.getElementById('current-servant-name').innerText = name;
-      saveStore();
-      toggleView('dashboard');
     };
 
     window.selectSector = function(sectorId) {
@@ -980,13 +1082,16 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      // شاشة تسجيل الدخول ظاهرة افتراضياً
+      document.getElementById('login-view').classList.remove('hidden');
+      document.getElementById('dashboard-view').classList.add('hidden');
+
       if (state.currentServant) {
         document.getElementById('current-servant-name').innerText = state.currentServant;
-        document.getElementById('login-name').value = state.currentServant;
+        const authIdInput = document.getElementById('auth-login-identifier');
+        if (authIdInput) authIdInput.value = state.currentServant;
       }
       renderAll();
     });
   </script>
-
-
 </body></html>
