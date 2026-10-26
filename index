@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>النظام المالي والمحاسبي الموحد - كنيسة الأنبا صموئيل المعترف</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+Arabic:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+
+  <style>
+    body { font-family: 'Cairo', 'Noto Sans Arabic', sans-serif; background-color: #0b1120; }
+    .card-hover { transition: all 0.25s ease; }
+    .card-hover:hover { transform: translateY(-3px); }
+    .sector-btn-active { border-color: #3b82f6 !important; background-color: rgba(30, 58, 138, 0.4) !important; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+    .action-btn-active { background: linear-gradient(135deg, #2563eb, #1d4ed8) !important; color: #ffffff !important; border-color: #60a5fa !important; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+
+  <!-- شريط تثبيت التطبيق وتنزيل ملفات النظام -->
+  <div class="bg-blue-600 text-white px-4 py-2.5 text-xs sm:text-sm flex flex-wrap items-center justify-between gap-2 shadow-lg">
+    <div class="flex items-center gap-2">
+      <i class="fa-solid fa-cloud-arrow-down text-amber-300 text-base"></i>
+      <span class="font-bold">حزمة النظام المالي الكاملة لكنيسة الأنبا صموئيل المعترف (جاهزة للتشغيل المباشر)</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="downloadSelf()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3.5 py-1.5 rounded-lg text-xs shadow flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-download"></i>
+        <span>تحميل ملف index.html الآن</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- رأس الصفحة العلوي (Header) -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-40 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-xl font-bold shadow-inner">
+          <i class="fa-solid fa-church"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-black tracking-tight text-white flex items-center gap-2">
+            كنيسة القديس الأنبا صموئيل المعترف
+            <span class="text-[10px] bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 px-2 py-0.5 rounded-full font-bold">
+              متصل ⚡
+            </span>
+          </h1>
+          <p class="text-[11px] text-slate-400">منظومة الحسابات والمخزون الموحدة للأقسام الثمانية</p>
+        </div>
+      </div>
+
+      <!-- معلومات الخادم النشط وزر التبديل والتحميل -->
+      <div class="flex items-center gap-2">
+        <button onclick="downloadSelf()" class="hidden sm:flex bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg text-xs font-bold items-center gap-1.5 transition">
+          <i class="fa-solid fa-file-arrow-down"></i>
+          <span>حفظ نسخة للموبايل</span>
+        </button>
+        <button onclick="toggleView('login')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 flex items-center gap-1.5 transition" title="تبديل الخادم">
+          <i class="fa-solid fa-user-gear text-amber-400"></i>
+          <span id="current-servant-name">الخادم المسؤول</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 1. شاشة تسجيل الدخول / تبديل الخادم -->
+  <main id="login-view" class="hidden flex-1 flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl text-right">
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 bg-gradient-to-tr from-amber-600 to-amber-400 rounded-2xl mx-auto flex items-center justify-center text-2xl text-slate-950 font-black shadow-lg shadow-amber-500/20 mb-3">
+          <i class="fa-solid fa-cross"></i>
+        </div>
+        <h2 class="text-lg font-black text-white">تسجيل خادم / أمين عهدة</h2>
+        <p class="text-xs text-slate-400 mt-1">كنيسة القديس الأنبا صموئيل المعترف</p>
+      </div>
+
+      <form onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">اسم الخادم ثلاثي</label>
+          <input type="text" id="login-name" required placeholder="مثال: ميخائيل جورج فرج" 
+                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">رقم الهاتف (WhatsApp)</label>
+          <input type="tel" id="login-phone" required placeholder="01xxxxxxxxx" dir="ltr"
+                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 text-left">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">القسم المسؤول عنه</label>
+          <select id="login-sector" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+            <option value="library">1. مكتبة الكنيسة ومنافذ بيع الكتب</option>
+            <option value="buses">2. قطاع الأتوبيسات والرحلات الديرية</option>
+            <option value="farm">3. مزرعة بركة صموئيل للدواجن والبيض</option>
+            <option value="garments">4. مصنع وتطريز الملابس الكنسية</option>
+            <option value="canteen">5. كانتين الكنيسة وقاعة الضيافة</option>
+            <option value="elderly">6. دار القديسين لرعاية المسنين</option>
+            <option value="special_needs">7. مركز الرجاء لذوي الاحتياجات الخاصة</option>
+            <option value="hall">8. قاعة المناسبات واستقبالات الأفراح</option>
+            <option value="all">كافة الأقسام (أمين الصندوق العام / مشرف)</option>
+          </select>
+        </div>
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          دخول لوحة التحكم والبدء
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- 2. لوحة التحكم التفاعلية الكبرى (Dashboard) -->
+  <main id="dashboard-view" class="flex-1 max-w-7xl mx-auto w-full px-4 lg:px-8 py-5 space-y-6">
+
+    <!-- كروت إجمالي المؤشرات المالية العامة -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg relative overflow-hidden">
+        <div class="text-xs font-bold text-slate-400 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          إجمالي أرصدة الخزائن (نقدية)
+        </div>
+        <div id="total-cash" class="text-2xl font-black text-emerald-400 mt-1">0 ج.م</div>
+        <div class="text-[10px] text-slate-500 mt-0.5">محدثة لحظياً لكافة الخزائن</div>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg relative overflow-hidden">
+        <div class="text-xs font-bold text-slate-400 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+          إجمالي الإيرادات والمبيعات
+        </div>
+        <div id="total-revenue" class="text-2xl font-black text-blue-400 mt-1">0 ج.م</div>
+        <div class="text-[10px] text-slate-500 mt-0.5">إجمالي الحركات الصادرة والواردة</div>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg relative overflow-hidden">
+        <div class="text-xs font-bold text-slate-400 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          عدد الأصناف المسجلة
+        </div>
+        <div id="total-items-count" class="text-2xl font-black text-amber-400 mt-1">0 صنف</div>
+        <div class="text-[10px] text-slate-500 mt-0.5">إجمالي المخزون في الأقسام الثمانية</div>
+      </div>
+    </div>
+
+    <!-- شريط الأقسام الثمانية -->
+    <section>
+      <div class="flex items-center justify-between mb-2.5">
+        <h3 class="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-blue-400"></i>
+          <span>أقسام الكنيسة الثمانية (اضغط على أي قسم لفتح لوحته وأصنافه)</span>
+        </h3>
+        <span class="text-[11px] text-slate-400">القسم المختار يحدد العمليات بالأسفل</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2" id="sectors-cards-container"></div>
+    </section>
+
+    <!-- بطاقة القسم النشط والأدوات التشغيلية الخمس -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center text-xl">
+            <i id="active-sec-icon" class="fa-solid fa-book-bible"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-full font-bold">القسم النشط حالياً</span>
+              <h2 id="active-sec-title" class="text-base sm:text-lg font-black text-white">مكتبة الكنيسة ومنافذ بيع الكتب</h2>
+            </div>
+            <div class="text-xs text-slate-400 mt-0.5">
+              خزينة القسم الحالية: <span id="active-sec-cash" class="font-bold text-emerald-400 font-mono">0 ج.م</span>
+              <span class="mx-1.5 text-slate-600">•</span>
+              الأصناف المتوفرة: <span id="active-sec-items-count" class="font-bold text-slate-200">0 صنف</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="openModal('add-item-modal')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow transition">
+            <i class="fa-solid fa-plus-circle"></i>
+            <span>إضافة صنف جديد</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- الأيقونات التشغيلية الخمس -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+        <button onclick="switchTab('items')" id="btn-tab-items" class="action-btn p-3 rounded-xl border border-slate-700 bg-slate-950 text-right transition flex flex-col justify-between h-20 text-slate-200 hover:border-blue-500">
+          <div class="flex items-center justify-between">
+            <span class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs"><i class="fa-solid fa-boxes-stacked"></i></span>
+            <span class="text-[10px] font-bold text-slate-500">1</span>
+          </div>
+          <div>
+            <div class="text-xs font-black">الأصناف ورصيد أول المدة</div>
+            <div class="text-[10px] text-slate-400">إدخال، جرد، وتعديل</div>
+          </div>
+        </button>
+
+        <button onclick="switchTab('invoice')" id="btn-tab-invoice" class="action-btn p-3 rounded-xl border border-slate-700 bg-slate-950 text-right transition flex flex-col justify-between h-20 text-slate-200 hover:border-emerald-500">
+          <div class="flex items-center justify-between">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+            <span class="text-[10px] font-bold text-slate-500">2</span>
+          </div>
+          <div>
+            <div class="text-xs font-black">تسجيل فاتورة بيع جديدة</div>
+            <div class="text-[10px] text-slate-400">خصم المخزون والإيراد</div>
+          </div>
+        </button>
+
+        <button onclick="switchTab('purchase')" id="btn-tab-purchase" class="action-btn p-3 rounded-xl border border-slate-700 bg-slate-950 text-right transition flex flex-col justify-between h-20 text-slate-200 hover:border-indigo-500">
+          <div class="flex items-center justify-between">
+            <span class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs"><i class="fa-solid fa-cart-flatbed"></i></span>
+            <span class="text-[10px] font-bold text-slate-500">3</span>
+          </div>
+          <div>
+            <div class="text-xs font-black">شراء وتوريد أصناف</div>
+            <div class="text-[10px] text-slate-400">إيداع وزيادة المخزون</div>
+          </div>
+        </button>
+
+        <button onclick="switchTab('treasury')" id="btn-tab-treasury" class="action-btn p-3 rounded-xl border border-slate-700 bg-slate-950 text-right transition flex flex-col justify-between h-20 text-slate-200 hover:border-amber-500">
+          <div class="flex items-center justify-between">
+            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs"><i class="fa-solid fa-vault"></i></span>
+            <span class="text-[10px] font-bold text-slate-500">4</span>
+          </div>
+          <div>
+            <div class="text-xs font-black">الخزينة وحركات النقدية</div>
+            <div class="text-[10px] text-slate-400">كشف حساب وتقفيل</div>
+          </div>
+        </button>
+
+        <button onclick="switchTab('reports')" id="btn-tab-reports" class="action-btn p-3 rounded-xl border border-slate-700 bg-slate-950 text-right transition flex flex-col justify-between h-20 text-slate-200 hover:border-rose-500">
+          <div class="flex items-center justify-between">
+            <span class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs"><i class="fa-solid fa-chart-pie"></i></span>
+            <span class="text-[10px] font-bold text-slate-500">5</span>
+          </div>
+          <div>
+            <div class="text-xs font-black">التقارير الشاملة</div>
+            <div class="text-[10px] text-slate-400">أصناف وخزائن ومراجعة</div>
+          </div>
+        </button>
+      </div>
+
+      <!-- مساحة المحتوى التشغيلي -->
+      <div class="bg-slate-950/80 rounded-xl p-4 sm:p-5 border border-slate-800">
+
+        <!-- 1. تبويب الأصناف -->
+        <div id="tab-content-items" class="space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-boxes-stacked text-blue-400"></i>
+                <span>قائمة أصناف ومخزون القسم المختار</span>
+              </h4>
+              <p class="text-[11px] text-slate-400">تعديل رصيد أول المدة وسعر البيع والتكلفة وحذف الأصناف</p>
+            </div>
+            <button onclick="openModal('add-item-modal')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition">
+              <i class="fa-solid fa-plus"></i>
+              <span>إضافة صنف لهذا القسم</span>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-800 rounded-xl">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-900 text-slate-400 border-b border-slate-800">
+                <tr>
+                  <th class="p-2.5">الكود</th>
+                  <th class="p-2.5">اسم الصنف</th>
+                  <th class="p-2.5">الوحدة</th>
+                  <th class="p-2.5">رصيد أول المدة</th>
+                  <th class="p-2.5">المتاح حالياً</th>
+                  <th class="p-2.5">سعر التكلفة</th>
+                  <th class="p-2.5">سعر البيع</th>
+                  <th class="p-2.5 text-center">إجراء</th>
+                </tr>
+              </thead>
+              <tbody id="items-table-body" class="divide-y divide-slate-850"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. تبويب فاتورة بيع -->
+        <div id="tab-content-invoice" class="hidden space-y-4">
+          <div>
+            <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i>
+              <span>إنشاء فاتورة مبيعات جديدة لـ: <span id="inv-active-sec-name" class="text-emerald-400"></span></span>
+            </h4>
+            <p class="text-[11px] text-slate-400">خصم الكمية من المخزون فوراً وزيادة رصيد خزينة القسم</p>
+          </div>
+
+          <form onsubmit="handleInvoiceSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">اختر الصنف من المخزون</label>
+              <select id="invoice-item-select" onchange="autoFillInvoicePrice()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-emerald-500"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">الكمية المباعة</label>
+              <input type="number" id="invoice-qty" value="1" min="1" oninput="calculateInvoiceTotal()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">سعر الوحدة (ج.م)</label>
+              <input type="number" id="invoice-price" value="0" min="0" oninput="calculateInvoiceTotal()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">خصم نقدي (ج.م - اختياري)</label>
+              <input type="number" id="invoice-discount" value="0" min="0" oninput="calculateInvoiceTotal()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div class="sm:col-span-2 lg:col-span-4 pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div class="text-xs">
+                إجمالي الفاتورة المطلوب تحصيله: <span id="invoice-total-display" class="text-base font-black text-emerald-400 font-mono">0 ج.م</span>
+              </div>
+              <button type="submit" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>حفظ وترحيل الفاتورة والخزينة</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 3. تبويب توريد وشراء -->
+        <div id="tab-content-purchase" class="hidden space-y-4">
+          <div>
+            <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-cart-flatbed text-indigo-400"></i>
+              <span>تسجيل توريد / إيداع بضاعة في مخزن القسم</span>
+            </h4>
+            <p class="text-[11px] text-slate-400">زيادة رصيد الصنف المتوفر وتحديث تكلفة الشراء</p>
+          </div>
+
+          <form onsubmit="handlePurchaseSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">الصنف المورد</label>
+              <select id="purchase-item-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">الكمية المضافة للمخزن</label>
+              <input type="number" id="purchase-qty" value="10" min="1" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">سعر شراء الوحدة (التكلفة)</label>
+              <input type="number" id="purchase-cost" value="50" min="0" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">اسم المورد / إذن الاستلام</label>
+              <input type="text" id="purchase-supplier" placeholder="مثال: مطبعة الدير / مورد البيض" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="sm:col-span-2 lg:col-span-4 pt-3 border-t border-slate-800 flex justify-end">
+              <button type="submit" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
+                <i class="fa-solid fa-arrow-down-to-bracket"></i>
+                <span>ترحيل وإيداع في المخزن</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 4. تبويب الخزينة -->
+        <div id="tab-content-treasury" class="hidden space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-vault text-amber-400"></i>
+                <span>كشف حساب وحركات خزينة القسم</span>
+              </h4>
+              <p class="text-[11px] text-slate-400">سجل عمليات القبض، الفواتير، ومصروفات القسم</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="promptTreasuryPayment()" class="bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/60 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition">
+                <i class="fa-solid fa-receipt"></i>
+                <span>تسجيل سند صرف / مصروف</span>
+              </button>
+              <button onclick="closeTreasuryPeriod()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition">
+                <i class="fa-solid fa-lock"></i>
+                <span>تقفيل الخزينة</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-800 rounded-xl">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-900 text-slate-400 border-b border-slate-800">
+                <tr>
+                  <th class="p-2.5">رقم الحركة</th>
+                  <th class="p-2.5">الوقت والتاريخ</th>
+                  <th class="p-2.5">البيان والتفاصيل</th>
+                  <th class="p-2.5">النوع</th>
+                  <th class="p-2.5">المبلغ</th>
+                  <th class="p-2.5">الخادم المسؤول</th>
+                </tr>
+              </thead>
+              <tbody id="treasury-table-body" class="divide-y divide-slate-850"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. تبويب التقارير -->
+        <div id="tab-content-reports" class="hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-pie text-rose-400"></i>
+                <span>التقرير الختامي المجمع لكافة الأقسام الثمانية</span>
+              </h4>
+              <p class="text-[11px] text-slate-400">مقارنة الخزائن والمخازن لكافة أنشطة الكنيسة</p>
+            </div>
+            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition">
+              <i class="fa-solid fa-print"></i>
+              <span>طباعة التقرير</span>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-800 rounded-xl">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-900 text-slate-400 border-b border-slate-800">
+                <tr>
+                  <th class="p-2.5">م</th>
+                  <th class="p-2.5">القسم</th>
+                  <th class="p-2.5">رصيد الخزينة</th>
+                  <th class="p-2.5">عدد الأصناف</th>
+                  <th class="p-2.5">حالة المطابقة</th>
+                </tr>
+              </thead>
+              <tbody id="reports-table-body" class="divide-y divide-slate-850"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- نافذة مودال لإضافة صنف جديد -->
+  <div id="add-item-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md p-5 sm:p-6 shadow-2xl relative text-right">
+      <button onclick="closeModal('add-item-modal')" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center absolute left-4 top-4 text-xs">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-2 mb-4 text-amber-400 text-sm font-bold">
+        <i class="fa-solid fa-boxes-packing text-lg"></i>
+        <span>تسجيل صنف جديد وتحديد رصيد أول المدة</span>
+      </div>
+
+      <form onsubmit="handleAddNewItem(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">القسم التابع له الصنف</label>
+          <select id="modal-item-sector" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200">
+            <option value="library">1. مكتبة الكنيسة ومنافذ بيع الكتب</option>
+            <option value="buses">2. قطاع الأتوبيسات والرحلات الديرية</option>
+            <option value="farm">3. مزرعة بركة صموئيل للدواجن والبيض</option>
+            <option value="garments">4. مصنع وتطريز الملابس الكنسية</option>
+            <option value="canteen">5. كانتين الكنيسة وقاعة الضيافة</option>
+            <option value="elderly">6. دار القديسين لرعاية المسنين</option>
+            <option value="special_needs">7. مركز الرجاء لذوي الاحتياجات الخاصة</option>
+            <option value="hall">8. قاعة المناسبات واستقبالات الأفراح</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">اسم الصنف الجديد</label>
+          <input type="text" id="modal-item-name" required placeholder="مثال: كرتونة بيض مائدة أحمر سوبر أو أجبية وسط" 
+                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-slate-300 mb-1">الوحدة</label>
+            <input type="text" id="modal-item-unit" value="قطعة" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-300 mb-1">رصيد أول المدة (الكمية)</label>
+            <input type="number" id="modal-item-qty" value="100" min="0" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-slate-300 mb-1">سعر التكلفة (ج.م)</label>
+            <input type="number" id="modal-item-cost" value="45" min="0" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-300 mb-1">سعر البيع الافتراضي (ج.م)</label>
+            <input type="number" id="modal-item-price" value="65" min="0" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 mt-2 transition">
+          <i class="fa-solid fa-check"></i>
+          حفظ الصنف في المخزون
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- تذييل الصفحة -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-3.5 px-4 text-center text-xs text-slate-500">
+    النظام المالي والمحاسبي الموحد © كنيسة القديس الأنبا صموئيل المعترف — جميع الحقوق محفوظة لبيت الرب
+  </footer>
+
+  <!-- محرك النظام المالي والتفاعل المكتمل وزر التنزيل الفوري -->
+  <script>
+    const SECTORS_LIST = [
+      { id: 'library', name: 'مكتبة الكنيسة والكتب', num: 1, icon: 'fa-book-bible', tag: 'مكتبات', cash: 0 },
+      { id: 'buses', name: 'قطاع الأتوبيسات والرحلات', num: 2, icon: 'fa-bus', tag: 'رحلات ودير', cash: 0 },
+      { id: 'farm', name: 'مزرعة بركة صموئيل للدواجن', num: 3, icon: 'fa-egg', tag: 'إنتاج داجني', cash: 0 },
+      { id: 'garments', name: 'مصنع الملابس والتطريز', num: 4, icon: 'fa-shirt', tag: 'ملابس كهنوتية', cash: 0 },
+      { id: 'canteen', name: 'كانتين الكنيسة وقاعة الضيافة', num: 5, icon: 'fa-mug-hot', tag: 'ضيافة', cash: 0 },
+      { id: 'elderly', name: 'دار القديسين لرعاية المسنين', num: 6, icon: 'fa-person-walking', tag: 'رعاية ومسنين', cash: 0 },
+      { id: 'special_needs', name: 'مركز الرجاء للاحتياجات', num: 7, icon: 'fa-hand-holding-heart', tag: 'رعاية خاصة', cash: 0 },
+      { id: 'hall', name: 'قاعة المناسبات والاستقبالات', num: 8, icon: 'fa-champagne-glasses', tag: 'أفراح ومناسبات', cash: 0 }
+    ];
+
+    const STORE_KEY = 'church_samuel_v3_store';
+    function getStore() {
+      const saved = localStorage.getItem(STORE_KEY);
+      if (saved) {
+        try { return JSON.parse(saved); } catch(e) {}
+      }
+      return {
+        activeSectorId: 'library',
+        currentServant: 'الخادم المسؤول',
+        sectors: {
+          library: { cash: 0, items: [
+            { id: 'it_lib_1', code: 'LIB-101', name: 'أجبية كبرى شمواه مذهبة', unit: 'نسخة', initQty: 50, currentQty: 50, costPrice: 45, sellPrice: 65 },
+            { id: 'it_lib_2', code: 'LIB-102', name: 'كتاب السنكسار الجامع - مجلدين', unit: 'طقم', initQty: 25, currentQty: 25, costPrice: 280, sellPrice: 350 },
+            { id: 'it_lib_3', code: 'LIB-103', name: 'بخور طبيعي معطر بالمسك', unit: 'علبة', initQty: 100, currentQty: 100, costPrice: 40, sellPrice: 60 }
+          ]},
+          buses: { cash: 0, items: [
+            { id: 'it_bus_1', code: 'BUS-201', name: 'تذكرة رحلة دير الأنبا صموئيل', unit: 'تذكرة', initQty: 200, currentQty: 200, costPrice: 50, sellPrice: 50 }
+          ]},
+          farm: { cash: 0, items: [
+            { id: 'it_frm_1', code: 'FRM-301', name: 'كرتونة بيض مائدة أحمر سوبر', unit: 'كرتونة', initQty: 400, currentQty: 400, costPrice: 130, sellPrice: 150 },
+            { id: 'it_frm_2', code: 'FRM-302', name: 'دواجن تسمين مجمدة 1200 جم', unit: 'دجاجة', initQty: 180, currentQty: 180, costPrice: 85, sellPrice: 105 }
+          ]},
+          garments: { cash: 0, items: [
+            { id: 'it_gar_1', code: 'GAR-401', name: 'تونية شماس كتان مطرزة', unit: 'تونية', initQty: 60, currentQty: 60, costPrice: 110, sellPrice: 160 }
+          ]},
+          canteen: { cash: 0, items: [
+            { id: 'it_can_1', code: 'CAN-501', name: 'وجبة إفطار صيامية متكاملة', unit: 'وجبة', initQty: 150, currentQty: 150, costPrice: 15, sellPrice: 25 }
+          ]},
+          elderly: { cash: 0, items: [
+            { id: 'it_eld_1', code: 'ELD-601', name: 'مساهمة شهرية رعاية مسن', unit: 'سهم', initQty: 100, currentQty: 100, costPrice: 100, sellPrice: 100 }
+          ]},
+          special_needs: { cash: 0, items: [
+            { id: 'it_spc_1', code: 'SPC-701', name: 'جلسة علاج طبيعي وتخاطب', unit: 'جلسة', initQty: 80, currentQty: 80, costPrice: 50, sellPrice: 50 }
+          ]},
+          hall: { cash: 0, items: [
+            { id: 'it_hal_1', code: 'HAL-801', name: 'حجز قاعة مناسبات (فترة مسائية)', unit: 'حجز', initQty: 30, currentQty: 30, costPrice: 500, sellPrice: 1200 }
+          ]}
+        },
+        transactions: []
+      };
+    }
+
+    let state = getStore();
+
+    function saveStore() {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      renderAll();
+    }
+
+    // تنزيل ملف الكود كاملاً ومباشرة
+    window.downloadSelf = function() {
+      const fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+      alert('تم بنجاح تنزيل ملف index.html كاملاً إلى جهازك!');
+    };
+
+    window.toggleView = function(view) {
+      document.getElementById('login-view').classList.toggle('hidden', view !== 'login');
+      document.getElementById('dashboard-view').classList.toggle('hidden', view !== 'dashboard');
+    };
+
+    window.handleLogin = function(e) {
+      e.preventDefault();
+      const name = document.getElementById('login-name').value;
+      const sector = document.getElementById('login-sector').value;
+      state.currentServant = name;
+      if (sector !== 'all' && state.sectors[sector]) {
+        state.activeSectorId = sector;
+      }
+      document.getElementById('current-servant-name').innerText = name;
+      saveStore();
+      toggleView('dashboard');
+    };
+
+    window.selectSector = function(sectorId) {
+      if (!state.sectors[sectorId]) return;
+      state.activeSectorId = sectorId;
+      document.getElementById('modal-item-sector').value = sectorId;
+      saveStore();
+    };
+
+    let currentTab = 'items';
+    window.switchTab = function(tabKey) {
+      currentTab = tabKey;
+      const tabs = ['items', 'invoice', 'purchase', 'treasury', 'reports'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('btn-tab-' + t);
+        const content = document.getElementById('tab-content-' + t);
+        if (t === tabKey) {
+          btn.classList.add('action-btn-active');
+          content.classList.remove('hidden');
+        } else {
+          btn.classList.remove('action-btn-active');
+          content.classList.add('hidden');
+        }
+      });
+      if (tabKey === 'invoice') populateInvoiceItems();
+      if (tabKey === 'purchase') populatePurchaseItems();
+    };
+
+    function renderSectorsCards() {
+      const container = document.getElementById('sectors-cards-container');
+      container.innerHTML = SECTORS_LIST.map(sec => {
+        const data = state.sectors[sec.id] || { cash: 0, items: [] };
+        const isActive = (sec.id === state.activeSectorId);
+        return `
+          <div onclick="selectSector('${sec.id}')" 
+               class="cursor-pointer bg-slate-900 border rounded-2xl p-2.5 sm:p-3 text-center transition card-hover ${isActive ? 'sector-btn-active' : 'border-slate-800 hover:border-slate-700'}">
+            <div class="w-8 h-8 mx-auto rounded-xl ${isActive ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-300'} flex items-center justify-center text-xs mb-1.5 shadow-sm">
+              <i class="fa-solid ${sec.icon}"></i>
+            </div>
+            <h4 class="font-bold text-xs text-white truncate">${sec.name}</h4>
+            <div class="text-[10px] text-slate-400 mt-0.5">${(data.items || []).length} صنف</div>
+            <div class="text-xs font-black text-emerald-400 font-mono mt-1">${(data.cash || 0).toLocaleString()} ج.م</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderItemsTable() {
+      const tbody = document.getElementById('items-table-body');
+      const secData = state.sectors[state.activeSectorId];
+      if (!secData || !secData.items || secData.items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-500 text-xs">لا توجد أصناف مسجلة لهذا القسم حالياً. اضغط "إضافة صنف جديد" بالزر الأصفر بالأعلى للبدء.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = secData.items.map((it, idx) => `
+        <tr class="hover:bg-slate-900/50 transition">
+          <td class="p-2.5 font-mono text-slate-400 font-bold">${it.code || 'ITM-' + (idx+1)}</td>
+          <td class="p-2.5 font-bold text-slate-100">${it.name}</td>
+          <td class="p-2.5 text-slate-400">${it.unit || 'قطعة'}</td>
+          <td class="p-2.5 font-bold text-slate-300">${it.initQty || 0}</td>
+          <td class="p-2.5 font-black ${(it.currentQty <= 5) ? 'text-rose-400' : 'text-emerald-400'}">${it.currentQty}</td>
+          <td class="p-2.5 text-slate-300 font-mono">${(it.costPrice || 0).toLocaleString()} ج.م</td>
+          <td class="p-2.5 font-bold text-blue-400 font-mono">${(it.sellPrice || 0).toLocaleString()} ج.م</td>
+          <td class="p-2.5 text-center">
+            <button onclick="deleteItem(${idx})" title="حذف الصنف" class="text-rose-400 hover:text-rose-300 p-1">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.deleteItem = function(idx) {
+      const secData = state.sectors[state.activeSectorId];
+      if (confirm(`هل ترغب في حذف الصنف (${secData.items[idx].name}) من مخزن القسم؟`)) {
+        secData.items.splice(idx, 1);
+        saveStore();
+      }
+    };
+
+    function populateInvoiceItems() {
+      const sel = document.getElementById('invoice-item-select');
+      const secData = state.sectors[state.activeSectorId];
+      const secInfo = SECTORS_LIST.find(s => s.id === state.activeSectorId);
+      document.getElementById('inv-active-sec-name').innerText = secInfo ? secInfo.name : '';
+
+      if (!secData || !secData.items || secData.items.length === 0) {
+        sel.innerHTML = '<option value="">لا توجد أصناف في هذا القسم</option>';
+        document.getElementById('invoice-price').value = 0;
+        calculateInvoiceTotal();
+        return;
+      }
+      sel.innerHTML = secData.items.map(it => `
+        <option value="${it.id}">${it.name} (المتاح: ${it.currentQty} ${it.unit})</option>
+      `).join('');
+      autoFillInvoicePrice();
+    }
+
+    window.autoFillInvoicePrice = function() {
+      const itemId = document.getElementById('invoice-item-select').value;
+      const secData = state.sectors[state.activeSectorId];
+      const it = secData.items.find(i => i.id === itemId);
+      if (it) {
+        document.getElementById('invoice-price').value = it.sellPrice || 0;
+      }
+      calculateInvoiceTotal();
+    };
+
+    window.calculateInvoiceTotal = function() {
+      const qty = Number(document.getElementById('invoice-qty').value) || 0;
+      const price = Number(document.getElementById('invoice-price').value) || 0;
+      const disc = Number(document.getElementById('invoice-discount').value) || 0;
+      const total = Math.max(0, (qty * price) - disc);
+      document.getElementById('invoice-total-display').innerText = total.toLocaleString() + ' ج.م';
+    };
+
+    window.handleInvoiceSubmit = function(e) {
+      e.preventDefault();
+      const itemId = document.getElementById('invoice-item-select').value;
+      const qty = Number(document.getElementById('invoice-qty').value) || 1;
+      const price = Number(document.getElementById('invoice-price').value) || 0;
+      const disc = Number(document.getElementById('invoice-discount').value) || 0;
+      const total = Math.max(0, (qty * price) - disc);
+
+      const secData = state.sectors[state.activeSectorId];
+      const secInfo = SECTORS_LIST.find(s => s.id === state.activeSectorId);
+      const it = secData.items.find(i => i.id === itemId);
+
+      if (!it) {
+        alert('يرجى اختيار صنف صحيح من القائمة.');
+        return;
+      }
+      if (it.currentQty < qty) {
+        alert(`المخزون المتوفر (${it.currentQty}) غير كافٍ لتسجيل بيع (${qty})!`);
+        return;
+      }
+
+      it.currentQty -= qty;
+      secData.cash = (secData.cash || 0) + total;
+
+      state.transactions.unshift({
+        id: 'INV-' + Date.now().toString().slice(-5),
+        sectorId: state.activeSectorId,
+        sectorName: secInfo.name,
+        date: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString('ar-EG'),
+        desc: `فاتورة بيع: ${it.name} (عدد ${qty} ${it.unit})` + (disc > 0 ? ` [خصم ${disc} ج.م]` : ''),
+        type: 'مبيعات (قبض)',
+        amount: total,
+        officer: state.currentServant || 'الخادم المسؤول'
+      });
+
+      saveStore();
+      alert(`تم بنجاح ترحيل الفاتورة بقيمة ${total.toLocaleString()} ج.م! تم خصم ${qty} من المخزون وإضافتها لخزينة (${secInfo.name}).`);
+      populateInvoiceItems();
+    };
+
+    function populatePurchaseItems() {
+      const sel = document.getElementById('purchase-item-select');
+      const secData = state.sectors[state.activeSectorId];
+      if (!secData || !secData.items || secData.items.length === 0) {
+        sel.innerHTML = '<option value="">لا توجد أصناف، أضف صنفاً أولاً</option>';
+        return;
+      }
+      sel.innerHTML = secData.items.map(it => `
+        <option value="${it.id}">${it.name} (المخزون الحالي: ${it.currentQty})</option>
+      `).join('');
+    }
+
+    window.handlePurchaseSubmit = function(e) {
+      e.preventDefault();
+      const itemId = document.getElementById('purchase-item-select').value;
+      const qty = Number(document.getElementById('purchase-qty').value) || 0;
+      const cost = Number(document.getElementById('purchase-cost').value) || 0;
+      const supplier = document.getElementById('purchase-supplier').value || 'مورد عام';
+
+      const secData = state.sectors[state.activeSectorId];
+      const secInfo = SECTORS_LIST.find(s => s.id === state.activeSectorId);
+      const it = secData.items.find(i => i.id === itemId);
+
+      if (!it) {
+        alert('يرجى اختيار صنف للتوريد');
+        return;
+      }
+
+      it.currentQty += qty;
+      it.costPrice = cost;
+
+      state.transactions.unshift({
+        id: 'SUP-' + Date.now().toString().slice(-5),
+        sectorId: state.activeSectorId,
+        sectorName: secInfo.name,
+        date: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString('ar-EG'),
+        desc: `توريد للمخزن: ${it.name} (إضافة ${qty} من ${supplier})`,
+        type: 'توريد مخزني',
+        amount: qty * cost,
+        officer: state.currentServant || 'الخادم المسؤول'
+      });
+
+      saveStore();
+      alert(`تم بنجاح إيداع ${qty} ${it.unit} في مخزن (${secInfo.name})! أصبح المخزون الحالي: ${it.currentQty}.`);
+      populatePurchaseItems();
+      e.target.reset();
+    };
+
+    function renderTreasuryTable() {
+      const tbody = document.getElementById('treasury-table-body');
+      const txs = state.transactions.filter(t => t.sectorId === state.activeSectorId);
+      if (txs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500 text-xs">لا توجد حركات نقدية مسجلة لخزينة هذا القسم بعد.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = txs.map(tx => {
+        const isExpense = tx.type.includes('صرف') || tx.type.includes('مصروف');
+        return `
+          <tr class="hover:bg-slate-900/50 transition">
+            <td class="p-2.5 font-mono text-slate-400 font-bold">${tx.id}</td>
+            <td class="p-2.5 text-slate-400">${tx.date}</td>
+            <td class="p-2.5 font-bold text-slate-100">${tx.desc}</td>
+            <td class="p-2.5">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isExpense ? 'bg-rose-500/20 text-rose-300' : 'bg-emerald-500/20 text-emerald-300'}">
+                ${tx.type}
+              </span>
+            </td>
+            <td class="p-2.5 font-mono font-bold ${isExpense ? 'text-rose-400' : 'text-emerald-400'}">
+              ${isExpense ? '-' : '+'}${tx.amount.toLocaleString()} ج.م
+            </td>
+            <td class="p-2.5 text-slate-300">${tx.officer}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.promptTreasuryPayment = function() {
+      const secData = state.sectors[state.activeSectorId];
+      const secInfo = SECTORS_LIST.find(s => s.id === state.activeSectorId);
+      const desc = prompt(`تسجيل سند صرف / مصروف لقسم (${secInfo.name}):\nاكتب بيان المصروف:`);
+      if (!desc) return;
+      const amt = parseFloat(prompt('أدخل المبلغ المصروف (ج.م):', '100'));
+      if (isNaN(amt) || amt <= 0) return;
+
+      secData.cash = Math.max(0, (secData.cash || 0) - amt);
+
+      state.transactions.unshift({
+        id: 'PAY-' + Date.now().toString().slice(-5),
+        sectorId: state.activeSectorId,
+        sectorName: secInfo.name,
+        date: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString('ar-EG'),
+        desc: `سند صرف: ${desc}`,
+        type: 'مصروف (صرف)',
+        amount: amt,
+        officer: state.currentServant || 'الخادم المسؤول'
+      });
+
+      saveStore();
+      alert(`تم تسجيل سند الصرف بقيمة ${amt.toLocaleString()} ج.م وخصمه من خزينة القسم.`);
+    };
+
+    window.closeTreasuryPeriod = function() {
+      const secData = state.sectors[state.activeSectorId];
+      const secInfo = SECTORS_LIST.find(s => s.id === state.activeSectorId);
+      const reportId = 'CLS-' + Date.now().toString().slice(-4);
+      alert(`[محضر تقفيل خزينة القسم]\nالقسم: ${secInfo.name}\nرقم المحضر: ${reportId}\nالرصيد النقدي الفعلي المعتمد: ${(secData.cash || 0).toLocaleString()} ج.م\nالخادم المسؤول: ${state.currentServant}\nتم تثبيت الرصيد وترحيله للمراجعة المالية بنجاح.`);
+    };
+
+    function renderReportsTable() {
+      const tbody = document.getElementById('reports-table-body');
+      tbody.innerHTML = SECTORS_LIST.map((sec, idx) => {
+        const d = state.sectors[sec.id] || { cash: 0, items: [] };
+        return `
+          <tr class="hover:bg-slate-900/50 transition">
+            <td class="p-2.5 font-mono text-slate-500">${idx + 1}</td>
+            <td class="p-2.5 font-bold text-slate-100 flex items-center gap-1.5">
+              <i class="fa-solid ${sec.icon} text-blue-400 text-xs"></i>
+              <span>${sec.name}</span>
+            </td>
+            <td class="p-2.5 font-mono font-bold text-emerald-400">${(d.cash || 0).toLocaleString()} ج.م</td>
+            <td class="p-2.5 font-bold text-slate-300">${(d.items || []).length} صنف</td>
+            <td class="p-2.5"><span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">مطابق 100%</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.openModal = (id) => document.getElementById(id).classList.remove('hidden');
+    window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
+
+    window.handleAddNewItem = function(e) {
+      e.preventDefault();
+      const secId = document.getElementById('modal-item-sector').value;
+      const name = document.getElementById('modal-item-name').value;
+      const unit = document.getElementById('modal-item-unit').value || 'قطعة';
+      const qty = Number(document.getElementById('modal-item-qty').value) || 0;
+      const cost = Number(document.getElementById('modal-item-cost').value) || 0;
+      const price = Number(document.getElementById('modal-item-price').value) || 0;
+
+      if (!state.sectors[secId]) state.sectors[secId] = { cash: 0, items: [] };
+      const sec = state.sectors[secId];
+      sec.items.push({
+        id: 'it_' + Date.now(),
+        code: secId.slice(0, 3).toUpperCase() + '-' + (sec.items.length + 101),
+        name,
+        unit,
+        initQty: qty,
+        currentQty: qty,
+        costPrice: cost,
+        sellPrice: price
+      });
+
+      closeModal('add-item-modal');
+      e.target.reset();
+      saveStore();
+      alert(`تمت إضافة الصنف (${name}) بنجاح إلى مخزن القسم!`);
+    };
+
+    function renderAll() {
+      const activeSecInfo = SECTORS_LIST.find(s => s.id === state.activeSectorId) || SECTORS_LIST[0];
+      const activeSecData = state.sectors[state.activeSectorId] || { cash: 0, items: [] };
+
+      document.getElementById('active-sec-title').innerText = activeSecInfo.name;
+      document.getElementById('active-sec-icon').className = 'fa-solid ' + activeSecInfo.icon;
+      document.getElementById('active-sec-cash').innerText = (activeSecData.cash || 0).toLocaleString() + ' ج.م';
+      document.getElementById('active-sec-items-count').innerText = (activeSecData.items || []).length + ' صنف';
+
+      let totalCash = 0;
+      let totalRev = 0;
+      let totalItems = 0;
+
+      for (const [key, val] of Object.entries(state.sectors)) {
+        totalCash += (val.cash || 0);
+        totalItems += (val.items ? val.items.length : 0);
+      }
+      state.transactions.forEach(t => {
+        if (t.type.includes('قبض') || t.type.includes('مبيعات')) totalRev += t.amount;
+      });
+
+      document.getElementById('total-cash').innerText = totalCash.toLocaleString() + ' ج.م';
+      document.getElementById('total-revenue').innerText = totalRev.toLocaleString() + ' ج.م';
+      document.getElementById('total-items-count').innerText = totalItems + ' صنف';
+
+      renderSectorsCards();
+      renderItemsTable();
+      renderTreasuryTable();
+      renderReportsTable();
+      switchTab(currentTab);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('current-servant-name').innerText = state.currentServant || 'الخادم المسؤول';
+      renderAll();
+    });
+  </script>
+</body>
+</html>
