@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>منظومة الحسابات والمخزون - كنيسة القديس الأنبا صموئيل المعترف</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #f8fafc;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between max-w-md mx-auto bg-white shadow-xl relative pb-20">
+
+  <!-- ================= TOP APP BAR ================= -->
+  <header class="sticky top-0 z-30 bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between shadow-xs">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center text-sm shadow">
+        <i class="fa-solid fa-church"></i>
+      </div>
+      <div>
+        <h1 class="text-xs font-bold text-slate-900 leading-tight">كنيسة الأنبا صموئيل المعترف</h1>
+        <p id="topBarSubtitle" class="text-[10px] text-slate-500">منظومة الحسابات والمخزون</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="userStatusBadge" class="hidden text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">خادم معتمد</span>
+      <button onclick="switchScreen('login')" class="text-slate-500 hover:text-slate-800 text-xs p-1" title="تبديل الخادم / تسجيل الخروج">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= SCREENS CONTAINER ================= -->
+  <main class="flex-1 p-4 overflow-y-auto">
+
+    <!-- 1. SCREEN: LOGIN & REGISTER -->
+    <section id="screen-login" class="space-y-4">
+      <div class="bg-gradient-to-br from-slate-900 to-blue-950 text-white p-5 rounded-2xl shadow-sm text-center">
+        <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-2 text-xl text-blue-200">
+          <i class="fa-solid fa-cross"></i>
+        </div>
+        <h2 class="text-base font-bold">بوابة الخدمة الكنسية</h2>
+        <p class="text-xs text-blue-200/80 mt-1">منظومة رعاية وخدمة شعب الكنيسة والأقسام الثمانية</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="grid grid-cols-2 bg-slate-100 p-1 rounded-xl text-xs font-medium">
+        <button id="tabBtnLogin" onclick="toggleAuthTab('login')" class="py-2 rounded-lg bg-white shadow-xs font-bold text-slate-900 transition">
+          <i class="fa-solid fa-arrow-right-to-bracket ml-1"></i> دخول خادم
+        </button>
+        <button id="tabBtnRegister" onclick="toggleAuthTab('register')" class="py-2 rounded-lg text-slate-600 transition">
+          <i class="fa-solid fa-user-plus ml-1"></i> خادم جديد
+        </button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="formLogin" onsubmit="handleLogin(event)" class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">اسم الخادم أو رقم الهاتف</label>
+          <input id="loginInputName" type="text" placeholder="مثال: بيشوي كامل أو 01234567890" required class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-600 bg-slate-50">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">كود المرور السري</label>
+          <input id="loginInputPass" type="password" placeholder="••••••••" required class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-600 bg-slate-50">
+        </div>
+        <button type="submit" class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-xl text-xs shadow flex items-center justify-center gap-2">
+          <span>دخول إلى حساب الخادم</span>
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="formRegister" onsubmit="handleRegister(event)" class="hidden bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">اسم الخادم ثلاثياً</label>
+          <input id="regName" type="text" placeholder="مثال: بيشوي عادل ميخائيل" required class="w-full text-xs p-3 rounded-xl border border-slate-200 bg-slate-50">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">رقم الهاتف (للتواصل وتأكيد الحركات)</label>
+          <input id="regPhone" type="tel" placeholder="01012345678" required class="w-full text-xs p-3 rounded-xl border border-slate-200 bg-slate-50">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">القسم المسؤول عنه</label>
+          <select id="regSector" class="w-full text-xs p-3 rounded-xl border border-slate-200 bg-slate-50">
+            <option value="all">كافة الأقسام (أمين الصندوق العام / مشرف)</option>
+            <option value="library">مكتبة الكنيسة والكتب</option>
+            <option value="buses">قطاع الأتوبيسات والرحلات</option>
+            <option value="farm">مزرعة بركة صموئيل للدواجن والبيض</option>
+            <option value="factory">مصنع وتطريز الملابس</option>
+            <option value="canteen">كانتين الكنيسة والضيافة</option>
+            <option value="elderly">دار القديسين للمسنين</option>
+            <option value="special">مركز الرجاء للاحتياجات الخاصة</option>
+            <option value="hall">قاعة المناسبات والأفراح</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">تعيين كود مرور جديد</label>
+          <input id="regPass" type="password" placeholder="••••••••" required class="w-full text-xs p-3 rounded-xl border border-slate-200 bg-slate-50">
+        </div>
+        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow flex items-center justify-center gap-2">
+          <span>حفظ واعتماد الخادم الجديد</span>
+          <i class="fa-solid fa-check"></i>
+        </button>
+      </form>
+    </section>
+
+    <!-- 2. SCREEN: MAIN DASHBOARD & INVOICES -->
+    <section id="screen-dashboard" class="hidden space-y-4">
+      <!-- 3 Metrics Cards -->
+      <div class="grid grid-cols-3 gap-2">
+        <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-xs text-center">
+          <p class="text-[10px] text-slate-500 font-semibold mb-0.5">أرصدة الخزائن</p>
+          <h3 id="statTotalCash" class="text-xs font-bold text-blue-900">0 ج.م</h3>
+          <span class="text-[9px] text-emerald-600 mt-1 inline-block font-mono">+ سيولة حية</span>
+        </div>
+        <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-xs text-center">
+          <p class="text-[10px] text-slate-500 font-semibold mb-0.5">الإيرادات</p>
+          <h3 id="statTotalRev" class="text-xs font-bold text-emerald-700">0 ج.م</h3>
+          <span class="text-[9px] text-slate-400 mt-1 inline-block">حركات واردة</span>
+        </div>
+        <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-xs text-center">
+          <p class="text-[10px] text-slate-500 font-semibold mb-0.5">المصروفات</p>
+          <h3 id="statTotalExp" class="text-xs font-bold text-red-600">0 ج.م</h3>
+          <span class="text-[9px] text-slate-400 mt-1 inline-block">مسحوبات</span>
+        </div>
+      </div>
+
+      <!-- Quick Invoice Form -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+        <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center text-xs">
+              <i class="fa-solid fa-receipt"></i>
+            </span>
+            <h3 class="text-xs font-bold text-slate-900">تسجيل فاتورة بيع جديدة</h3>
+          </div>
+          <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono">ترحيل فوري</span>
+        </div>
+
+        <form id="formInvoice" onsubmit="handleInvoice(event)" class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">القسم التابع له الإيراد</label>
+            <select id="invSector" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+              <option value="library">مكتبة الكنيسة ومنافذ بيع الكتب</option>
+              <option value="buses">قطاع الأتوبيسات والرحلات</option>
+              <option value="farm" selected>مزرعة بركة صموئيل (دواجن وبيض)</option>
+              <option value="factory">مصنع وتطريز الملابس</option>
+              <option value="canteen">كانتين الكنيسة وقاعة الضيافة</option>
+              <option value="elderly">دار القديسين لرعاية المسنين</option>
+              <option value="special">مركز الرجاء لذوي الاحتياجات</option>
+              <option value="hall">قاعة المناسبات والأفراح</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">الصنف / البيان التفصيلي</label>
+            <input id="invItem" type="text" placeholder="مثال: كرتونة بيض مائدة أو كتاب صلوات" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-1">الكمية</label>
+              <input id="invQty" type="number" min="1" value="1" oninput="calcInvTotal()" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-1">سعر الوحدة (ج.م)</label>
+              <input id="invPrice" type="number" min="0" value="150" oninput="calcInvTotal()" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+            </div>
+          </div>
+
+          <div class="bg-blue-50/70 p-2.5 rounded-xl border border-blue-100 flex items-center justify-between text-xs font-bold text-blue-900">
+            <span>إجمالي الفاتورة:</span>
+            <span id="invTotalText">150 ج.م</span>
+          </div>
+
+          <button type="submit" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-xl text-xs shadow flex items-center justify-center gap-2">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>حفظ وترحيل الفاتورة للخزينة</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Sectors Grid (8 Sectors) -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <i class="fa-solid fa-table-cells-large text-blue-800"></i>
+          <span>أقسام الكنيسة الثمانية (حالة الخزائن الحالية)</span>
+        </h4>
+        <div id="sectorsGrid" class="grid grid-cols-2 gap-2">
+          <!-- Dynamically populated or default elements -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SCREEN: SUPER ADMIN (AUDIT LOG & SERVANTS) -->
+    <section id="screen-admin" class="hidden space-y-4">
+      <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-blue-900 text-white flex items-center justify-center text-xl">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-1.5">
+              <h3 class="text-xs font-bold text-slate-900">المشرف العام</h3>
+              <span class="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">صلاحية كاملة</span>
+            </div>
+            <p class="text-[10px] text-slate-500 mt-0.5">أمانة الصندوق والرقابة المالية المركزية</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-slate-100 text-center">
+          <div>
+            <span class="text-[10px] text-slate-500">الخدام</span>
+            <p id="adminServantsCount" class="text-xs font-bold text-slate-900">8</p>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-500">حركات اليوم</span>
+            <p id="adminTxCount" class="text-xs font-bold text-blue-900">0</p>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-500">الحالة</span>
+            <p class="text-xs font-bold text-emerald-600">نشط</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servants List -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3">
+        <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <i class="fa-solid fa-users text-blue-800"></i>
+          <span>الخدام وأمناء العهد المسجلين</span>
+        </h4>
+        <div id="servantsList" class="space-y-2">
+          <!-- Populated -->
+        </div>
+      </div>
+
+      <!-- Master Transactions Log -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-receipt text-blue-800"></i>
+            <span>سجل الحركات الموحد (Audit Log)</span>
+          </h4>
+          <span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded font-mono">محدث لحظياً</span>
+        </div>
+        <div id="transactionsList" class="space-y-2">
+          <!-- Transactions -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FIXED BOTTOM NAV ================= -->
+  <nav id="bottomNav" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-slate-200 px-3 py-2 flex justify-around items-center z-30 shadow-lg">
+    <button onclick="switchScreen('dashboard')" id="navBtn-dashboard" class="flex flex-col items-center gap-1 text-blue-900 text-xs font-bold py-1">
+      <i class="fa-solid fa-table-columns text-sm"></i>
+      <span class="text-[10px]">الرئيسية</span>
+    </button>
+    <button onclick="switchScreen('sectors')" id="navBtn-sectors" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-700 text-xs font-medium py-1">
+      <i class="fa-solid fa-layer-group text-sm"></i>
+      <span class="text-[10px]">الأقسام الـ 8</span>
+    </button>
+    <button onclick="switchScreen('admin')" id="navBtn-admin" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-700 text-xs font-medium py-1">
+      <i class="fa-solid fa-user-shield text-sm"></i>
+      <span class="text-[10px]">الإدارة والمشرف</span>
+    </button>
+  </nav>
+
+  <!-- ================= JS APPLICATION ENGINE ================= -->
+  <script>
+    // State Store
+    const state = {
+      user: { name: 'الخادم المسؤول', role: 'admin' },
+      totals: { cash: 0, revenue: 0, expenses: 0 },
+      sectors: [
+        { id: 'library', name: 'مكتبة الكنيسة والكتب', cash: 0, icon: 'fa-book' },
+        { id: 'buses', name: 'قطاع الأتوبيسات والرحلات', cash: 0, icon: 'fa-bus' },
+        { id: 'farm', name: 'مزرعة بركة صموئيل', cash: 0, icon: 'fa-egg' },
+        { id: 'factory', name: 'مصنع وتطريز الملابس', cash: 0, icon: 'fa-shirt' },
+        { id: 'canteen', name: 'كانتين الكنيسة والضيافة', cash: 0, icon: 'fa-mug-hot' },
+        { id: 'elderly', name: 'دار القديسين للمسنين', cash: 0, icon: 'fa-heart-pulse' },
+        { id: 'special', name: 'مركز الرجاء للاحتياجات', cash: 0, icon: 'fa-hands-holding-child' },
+        { id: 'hall', name: 'قاعة المناسبات والأفراح', cash: 0, icon: 'fa-champagne-glasses' }
+      ],
+      servants: [
+        { name: 'م. بيشوي عادل', role: 'أمين قطاع التربية', phone: '01012345678', tag: 'إدخال وترحيل' },
+        { name: 'مريم سمير جورج', role: 'مسؤولة خدمة إخوة الرب', phone: '01234567890', tag: 'صرف واعتماد' },
+        { name: 'الشماس عماد رمزي', role: 'أمين المباني والمشتروات', phone: '01123456789', tag: 'إدخال فواتير' }
+      ],
+      transactions: []
+    };
+
+    function renderSectors() {
+      const container = document.getElementById('sectorsGrid');
+      if (!container) return;
+      container.innerHTML = state.sectors.map(s => `
+        <div class="bg-white border border-slate-200 p-2.5 rounded-xl shadow-xs flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-900 flex items-center justify-center text-xs">
+              <i class="fa-solid ${s.icon}"></i>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-slate-800 leading-tight">${s.name}</p>
+              <span class="text-[10px] text-emerald-600 font-bold">${s.cash.toLocaleString()} ج.م</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderServants() {
+      const container = document.getElementById('servantsList');
+      if (!container) return;
+      container.innerHTML = state.servants.map(sv => `
+        <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center justify-between text-xs">
+          <div>
+            <p class="font-bold text-slate-900">${sv.name}</p>
+            <p class="text-[10px] text-slate-500">${sv.role} • ${sv.phone}</p>
+          </div>
+          <span class="text-[9px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-medium">${sv.tag}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderTransactions() {
+      const container = document.getElementById('transactionsList');
+      if (!container) return;
+      if (state.transactions.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">لا توجد حركات مسجلة حتى الآن. ابدأ بتسجيل فاتورة من الرئيسية.</p>';
+        return;
+      }
+      container.innerHTML = state.transactions.map(t => `
+        <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center justify-between text-xs">
+          <div>
+            <p class="font-bold text-slate-900">${t.item} (${t.sectorName})</p>
+            <p class="text-[10px] text-slate-400">${t.time} • بواسطة: ${t.by}</p>
+          </div>
+          <span class="text-xs font-bold text-emerald-700 font-mono">+${t.total.toLocaleString()} ج.م</span>
+        </div>
+      `).join('');
+    }
+
+    function updateTotalsUI() {
+      document.getElementById('statTotalCash').innerText = state.totals.cash.toLocaleString() + ' ج.م';
+      document.getElementById('statTotalRev').innerText = state.totals.revenue.toLocaleString() + ' ج.م';
+      document.getElementById('statTotalExp').innerText = state.totals.expenses.toLocaleString() + ' ج.م';
+      document.getElementById('adminTxCount').innerText = state.transactions.length;
+      document.getElementById('adminServantsCount').innerText = state.servants.length;
+    }
+
+    function toggleAuthTab(tab) {
+      if (tab === 'login') {
+        document.getElementById('formLogin').classList.remove('hidden');
+        document.getElementById('formRegister').classList.add('hidden');
+        document.getElementById('tabBtnLogin').className = 'py-2 rounded-lg bg-white shadow-xs font-bold text-slate-900 transition';
+        document.getElementById('tabBtnRegister').className = 'py-2 rounded-lg text-slate-600 transition';
+      } else {
+        document.getElementById('formLogin').classList.add('hidden');
+        document.getElementById('formRegister').classList.remove('hidden');
+        document.getElementById('tabBtnLogin').className = 'py-2 rounded-lg text-slate-600 transition';
+        document.getElementById('tabBtnRegister').className = 'py-2 rounded-lg bg-white shadow-xs font-bold text-slate-900 transition';
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const name = document.getElementById('loginInputName').value;
+      state.user.name = name;
+      document.getElementById('userStatusBadge').classList.remove('hidden');
+      document.getElementById('userStatusBadge').innerText = name;
+      switchScreen('dashboard');
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('regName').value;
+      const phone = document.getElementById('regPhone').value;
+      const sectorId = document.getElementById('regSector').value;
+      state.servants.unshift({ name, role: 'خادم ' + sectorId, phone, tag: 'نشط حديثاً' });
+      state.user.name = name;
+      document.getElementById('userStatusBadge').classList.remove('hidden');
+      document.getElementById('userStatusBadge').innerText = name;
+      renderServants();
+      switchScreen('dashboard');
+    }
+
+    function calcInvTotal() {
+      const q = Number(document.getElementById('invQty').value) || 0;
+      const p = Number(document.getElementById('invPrice').value) || 0;
+      document.getElementById('invTotalText').innerText = (q * p).toLocaleString() + ' ج.م';
+    }
+
+    function handleInvoice(e) {
+      e.preventDefault();
+      const secId = document.getElementById('invSector').value;
+      const item = document.getElementById('invItem').value;
+      const qty = Number(document.getElementById('invQty').value) || 1;
+      const price = Number(document.getElementById('invPrice').value) || 0;
+      const total = qty * price;
+
+      const sec = state.sectors.find(s => s.id === secId);
+      if (sec) sec.cash += total;
+      state.totals.cash += total;
+      state.totals.revenue += total;
+
+      state.transactions.unshift({
+        item,
+        sectorName: sec ? sec.name : secId,
+        qty,
+        total,
+        time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
+        by: state.user.name
+      });
+
+      updateTotalsUI();
+      renderSectors();
+      renderTransactions();
+
+      alert('تم حفظ الفاتورة وترحيل مبلغ ' + total + ' ج.م لخزينة ' + (sec ? sec.name : ''));
+      document.getElementById('invItem').value = '';
+    }
+
+    function switchScreen(target) {
+      const screens = ['login', 'dashboard', 'admin'];
+      screens.forEach(s => {
+        const el = document.getElementById('screen-' + s);
+        if (el) el.classList.add('hidden');
+      });
+
+      if (target === 'sectors') {
+        document.getElementById('screen-dashboard').classList.remove('hidden');
+        window.scrollTo({ top: document.getElementById('sectorsGrid').offsetTop, behavior: 'smooth' });
+      } else {
+        const active = document.getElementById('screen-' + target);
+        if (active) active.classList.remove('hidden');
+      }
+
+      // Update Nav buttons styling
+      ['dashboard', 'sectors', 'admin'].forEach(nav => {
+        const btn = document.getElementById('navBtn-' + nav);
+        if (btn) {
+          if (nav === target || (target === 'sectors' && nav === 'sectors')) {
+            btn.className = 'flex flex-col items-center gap-1 text-blue-900 text-xs font-bold py-1';
+          } else {
+            btn.className = 'flex flex-col items-center gap-1 text-slate-400 hover:text-slate-700 text-xs font-medium py-1';
+          }
+        }
+      });
+    }
+
+    // Init on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderSectors();
+      renderServants();
+      renderTransactions();
+      updateTotalsUI();
+    });
+  </script>
+</body>
+</html>
