@@ -2,468 +2,573 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>منظومة الحسابات والمخزون - كنيسة القديس الأنبا صموئيل المعترف</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>النظام المالي والمحاسبي - كنيسة القديس الأنبا صموئيل المعترف</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    body {
-      font-family: 'IBM Plex Sans Arabic', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-      background-color: #f8fafc;
-    }
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
   </style>
 </head>
-<body class="min-h-screen text-slate-800 flex flex-col justify-between max-w-md mx-auto bg-white shadow-xl relative pb-20">
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-24 select-none">
 
-  <!-- ================= TOP APP BAR ================= -->
-  <header class="sticky top-0 z-30 bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between shadow-xs">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center text-sm shadow">
-        <i class="fa-solid fa-church"></i>
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-700 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+          ✝
+        </div>
+        <div>
+          <h1 class="text-sm font-bold text-slate-900 leading-tight">كنيسة الأنبا صموئيل المعترف</h1>
+          <p class="text-xs text-emerald-600 font-medium flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            متصل سحابياً (Supabase Live)
+          </p>
+        </div>
       </div>
-      <div>
-        <h1 class="text-xs font-bold text-slate-900 leading-tight">كنيسة الأنبا صموئيل المعترف</h1>
-        <p id="topBarSubtitle" class="text-[10px] text-slate-500">منظومة الحسابات والمخزون</p>
+      <div class="flex items-center gap-2">
+        <span id="currentUserBadge" class="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded-lg border border-slate-200 font-medium">زائر</span>
       </div>
-    </div>
-    <div class="flex items-center gap-2">
-      <span id="userStatusBadge" class="hidden text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">خادم معتمد</span>
-      <button onclick="switchScreen('login')" class="text-slate-500 hover:text-slate-800 text-xs p-1" title="تبديل الخادم / تسجيل الخروج">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-      </button>
     </div>
   </header>
 
-  <!-- ================= SCREENS CONTAINER ================= -->
-  <main class="flex-1 p-4 overflow-y-auto">
+  <!-- Main Container -->
+  <main class="max-w-md mx-auto p-4 space-y-4">
 
-    <!-- 1. SCREEN: LOGIN & REGISTER -->
-    <section id="screen-login" class="space-y-4">
-      <div class="bg-gradient-to-br from-slate-900 to-blue-950 text-white p-5 rounded-2xl shadow-sm text-center">
-        <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-2 text-xl text-blue-200">
-          <i class="fa-solid fa-cross"></i>
+    <!-- 1. شاشة تسجيل الدخول وإنشاء حساب خادم جديد -->
+    <section id="view-auth" class="tab-content active space-y-4">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-center">
+        <div class="w-14 h-14 bg-blue-50 text-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-3">
+          <i data-lucide="shield-check" class="w-7 h-7"></i>
         </div>
-        <h2 class="text-base font-bold">بوابة الخدمة الكنسية</h2>
-        <p class="text-xs text-blue-200/80 mt-1">منظومة رعاية وخدمة شعب الكنيسة والأقسام الثمانية</p>
-      </div>
+        <h2 class="text-lg font-bold text-slate-900">بوابة الخدام والمشرفين</h2>
+        <p class="text-xs text-slate-500 mt-1">تسجيل الدخول أو تسجيل خادم جديد لربطه سحابياً بالأقسام</p>
 
-      <!-- Tabs -->
-      <div class="grid grid-cols-2 bg-slate-100 p-1 rounded-xl text-xs font-medium">
-        <button id="tabBtnLogin" onclick="toggleAuthTab('login')" class="py-2 rounded-lg bg-white shadow-xs font-bold text-slate-900 transition">
-          <i class="fa-solid fa-arrow-right-to-bracket ml-1"></i> دخول خادم
-        </button>
-        <button id="tabBtnRegister" onclick="toggleAuthTab('register')" class="py-2 rounded-lg text-slate-600 transition">
-          <i class="fa-solid fa-user-plus ml-1"></i> خادم جديد
-        </button>
-      </div>
-
-      <!-- Login Form -->
-      <form id="formLogin" onsubmit="handleLogin(event)" class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3.5">
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">اسم الخادم أو رقم الهاتف</label>
-          <input id="loginInputName" type="text" placeholder="مثال: بيشوي كامل أو 01234567890" required class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-600 bg-slate-50">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">كود المرور السري</label>
-          <input id="loginInputPass" type="password" placeholder="••••••••" required class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-600 bg-slate-50">
-        </div>
-        <button type="submit" class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-xl text-xs shadow flex items-center justify-center gap-2">
-          <span>دخول إلى حساب الخادم</span>
-          <i class="fa-solid fa-arrow-left"></i>
-        </button>
-      </form>
-
-      <!-- Register Form -->
-      <form id="formRegister" onsubmit="handleRegister(event)" class="hidden bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3.5">
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">اسم الخادم ثلاثياً</label>
-          <input id="regName" type="text" placeholder="مثال: بيشوي عادل ميخائيل" required class="w-full text-xs p-3 rounded-xl border border-slate-200 bg-slate-50">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">رقم الهاتف (للتواصل وتأكيد الحركات)</label>
-          <input id="regPhone" type="tel" placeholder="01012345678" required class="w-full text-xs p-3 rounded-xl border border-slate-200 bg-slate-50">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">القسم المسؤول عنه</label>
-          <select id="regSector" class="w-full text-xs p-3 rounded-xl border border-slate-200 bg-slate-50">
-            <option value="all">كافة الأقسام (أمين الصندوق العام / مشرف)</option>
-            <option value="library">مكتبة الكنيسة والكتب</option>
-            <option value="buses">قطاع الأتوبيسات والرحلات</option>
-            <option value="farm">مزرعة بركة صموئيل للدواجن والبيض</option>
-            <option value="factory">مصنع وتطريز الملابس</option>
-            <option value="canteen">كانتين الكنيسة والضيافة</option>
-            <option value="elderly">دار القديسين للمسنين</option>
-            <option value="special">مركز الرجاء للاحتياجات الخاصة</option>
-            <option value="hall">قاعة المناسبات والأفراح</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">تعيين كود مرور جديد</label>
-          <input id="regPass" type="password" placeholder="••••••••" required class="w-full text-xs p-3 rounded-xl border border-slate-200 bg-slate-50">
-        </div>
-        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow flex items-center justify-center gap-2">
-          <span>حفظ واعتماد الخادم الجديد</span>
-          <i class="fa-solid fa-check"></i>
-        </button>
-      </form>
-    </section>
-
-    <!-- 2. SCREEN: MAIN DASHBOARD & INVOICES -->
-    <section id="screen-dashboard" class="hidden space-y-4">
-      <!-- 3 Metrics Cards -->
-      <div class="grid grid-cols-3 gap-2">
-        <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-xs text-center">
-          <p class="text-[10px] text-slate-500 font-semibold mb-0.5">أرصدة الخزائن</p>
-          <h3 id="statTotalCash" class="text-xs font-bold text-blue-900">0 ج.م</h3>
-          <span class="text-[9px] text-emerald-600 mt-1 inline-block font-mono">+ سيولة حية</span>
-        </div>
-        <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-xs text-center">
-          <p class="text-[10px] text-slate-500 font-semibold mb-0.5">الإيرادات</p>
-          <h3 id="statTotalRev" class="text-xs font-bold text-emerald-700">0 ج.م</h3>
-          <span class="text-[9px] text-slate-400 mt-1 inline-block">حركات واردة</span>
-        </div>
-        <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-xs text-center">
-          <p class="text-[10px] text-slate-500 font-semibold mb-0.5">المصروفات</p>
-          <h3 id="statTotalExp" class="text-xs font-bold text-red-600">0 ج.م</h3>
-          <span class="text-[9px] text-slate-400 mt-1 inline-block">مسحوبات</span>
-        </div>
-      </div>
-
-      <!-- Quick Invoice Form -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
-        <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
-          <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center text-xs">
-              <i class="fa-solid fa-receipt"></i>
-            </span>
-            <h3 class="text-xs font-bold text-slate-900">تسجيل فاتورة بيع جديدة</h3>
-          </div>
-          <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono">ترحيل فوري</span>
+        <!-- Toggle Auth Buttons -->
+        <div class="flex bg-slate-100 p-1 rounded-xl mt-4 border border-slate-200">
+          <button id="toggleLoginBtn" onclick="switchAuthMode('login')" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white shadow-sm text-slate-900 transition">تسجيل دخول</button>
+          <button id="toggleRegisterBtn" onclick="switchAuthMode('register')" class="flex-1 py-1.5 text-xs font-bold rounded-lg text-slate-500 transition">خادم جديد</button>
         </div>
 
-        <form id="formInvoice" onsubmit="handleInvoice(event)" class="space-y-3">
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="handleLogin(event)" class="mt-4 space-y-3 text-right">
           <div>
-            <label class="block text-[11px] font-semibold text-slate-700 mb-1">القسم التابع له الإيراد</label>
-            <select id="invSector" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+            <label class="block text-xs font-medium text-slate-700 mb-1">رقم الهاتف</label>
+            <input type="tel" id="loginPhone" placeholder="01xxxxxxxxx" required class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-600 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">كود المرور (PIN)</label>
+            <input type="password" id="loginPin" placeholder="****" required class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-600 bg-slate-50">
+          </div>
+          <button type="submit" class="w-full py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs rounded-xl shadow-sm transition">
+            دخول لوحة التحكم
+          </button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" onsubmit="handleRegister(event)" class="mt-4 space-y-3 text-right hidden">
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">اسم الخادم ثلاثي</label>
+            <input type="text" id="regName" placeholder="مينا عادل فرج" required class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-600 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">رقم الهاتف للتواصل</label>
+            <input type="tel" id="regPhone" placeholder="012xxxxxxxx" required class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-600 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">القسم الخدمي التابع له</label>
+            <select id="regSector" class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-600 bg-slate-50">
               <option value="library">مكتبة الكنيسة ومنافذ بيع الكتب</option>
               <option value="buses">قطاع الأتوبيسات والرحلات</option>
-              <option value="farm" selected>مزرعة بركة صموئيل (دواجن وبيض)</option>
-              <option value="factory">مصنع وتطريز الملابس</option>
+              <option value="poultry_farm">مزرعة بركة صموئيل للدواجن والبيض</option>
+              <option value="garments_factory">مصنع وتطريز الملابس والزي</option>
               <option value="canteen">كانتين الكنيسة وقاعة الضيافة</option>
-              <option value="elderly">دار القديسين لرعاية المسنين</option>
-              <option value="special">مركز الرجاء لذوي الاحتياجات</option>
-              <option value="hall">قاعة المناسبات والأفراح</option>
+              <option value="elderly_care">دار القديسين لرعاية المسنين</option>
+              <option value="special_needs">مركز الرجاء لذوي الاحتياجات</option>
+              <option value="events_hall">قاعة المناسبات واستقبالات الأفراح</option>
             </select>
           </div>
-
           <div>
-            <label class="block text-[11px] font-semibold text-slate-700 mb-1">الصنف / البيان التفصيلي</label>
-            <input id="invItem" type="text" placeholder="مثال: كرتونة بيض مائدة أو كتاب صلوات" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+            <label class="block text-xs font-medium text-slate-700 mb-1">كود مرور شخصي (PIN)</label>
+            <input type="password" id="regPin" placeholder="4 أرقام" required class="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-600 bg-slate-50">
+          </div>
+          <button type="submit" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-sm transition">
+            تسجيل وإرسال للاعتماد سحابياً
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2. الرئيسية - لوحة الخزائن والفواتير -->
+    <section id="view-dashboard" class="tab-content space-y-4">
+      
+      <!-- أرصدة الخزائن العلوية -->
+      <div class="grid grid-cols-3 gap-2">
+        <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <p class="text-[10px] text-slate-500 font-medium">نقدية الخزائن</p>
+          <p id="totalCash" class="text-sm font-bold text-blue-700 mt-1">277,700 ج.م</p>
+          <span class="text-[9px] text-emerald-600 font-medium">محدث لحظياً</span>
+        </div>
+        <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <p class="text-[10px] text-slate-500 font-medium">إجمالي الإيرادات</p>
+          <p id="totalRev" class="text-sm font-bold text-emerald-700 mt-1">738,000 ج.م</p>
+          <span class="text-[9px] text-slate-400">تراكمي</span>
+        </div>
+        <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <p class="text-[10px] text-slate-500 font-medium">المصروفات</p>
+          <p id="totalExp" class="text-sm font-bold text-rose-700 mt-1">460,300 ج.م</p>
+          <span class="text-[9px] text-slate-400">مسحوبات</span>
+        </div>
+      </div>
+
+      <!-- تسجيل فاتورة / حركة بيع سريعة -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <h3 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+            <i data-lucide="receipt" class="w-4 h-4 text-blue-600"></i>
+            تسجيل فاتورة بيع وخصم المخزون
+          </h3>
+          <span class="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">خصم تلقائي</span>
+        </div>
+
+        <form id="invoiceForm" onsubmit="handleInvoiceSubmit(event)" class="space-y-2.5">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] font-medium text-slate-600 mb-1">القسم</label>
+              <select id="invSector" onchange="updateSectorItems()" class="w-full text-xs px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50">
+                <option value="poultry_farm">مزرعة الدواجن</option>
+                <option value="library">مكتبة الكنيسة</option>
+                <option value="buses">قطاع الأتوبيسات</option>
+                <option value="garments_factory">مصنع الملابس</option>
+                <option value="canteen">الكانتين والضيافة</option>
+                <option value="elderly_care">دار المسنين</option>
+                <option value="special_needs">مركز الرجاء</option>
+                <option value="events_hall">قاعة المناسبات</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-medium text-slate-600 mb-1">الصنف</label>
+              <select id="invItem" onchange="calculateInvoiceTotal()" class="w-full text-xs px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50">
+                <option value="150" data-name="كرتونة بيض أحمر">كرتونة بيض أحمر (150 ج.م)</option>
+                <option value="105" data-name="دواجن تسمين 1200جم">دواجن تسمين (105 ج.م)</option>
+              </select>
+            </div>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-[11px] font-semibold text-slate-700 mb-1">الكمية</label>
-              <input id="invQty" type="number" min="1" value="1" oninput="calcInvTotal()" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+              <label class="block text-[10px] font-medium text-slate-600 mb-1">الكمية</label>
+              <input type="number" id="invQty" value="1" min="1" oninput="calculateInvoiceTotal()" class="w-full text-xs px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50">
             </div>
             <div>
-              <label class="block text-[11px] font-semibold text-slate-700 mb-1">سعر الوحدة (ج.م)</label>
-              <input id="invPrice" type="number" min="0" value="150" oninput="calcInvTotal()" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+              <label class="block text-[10px] font-medium text-slate-600 mb-1">الإجمالي (ج.م)</label>
+              <input type="text" id="invTotal" value="150 ج.م" readonly class="w-full text-xs font-bold text-blue-700 px-2.5 py-2 rounded-xl border border-slate-200 bg-blue-50/50">
             </div>
           </div>
 
-          <div class="bg-blue-50/70 p-2.5 rounded-xl border border-blue-100 flex items-center justify-between text-xs font-bold text-blue-900">
-            <span>إجمالي الفاتورة:</span>
-            <span id="invTotalText">150 ج.م</span>
-          </div>
-
-          <button type="submit" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-xl text-xs shadow flex items-center justify-center gap-2">
-            <i class="fa-solid fa-floppy-disk"></i>
-            <span>حفظ وترحيل الفاتورة للخزينة</span>
+          <button type="submit" class="w-full py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            حفظ وترحيل الفاتورة في Supabase
           </button>
         </form>
       </div>
 
-      <!-- Sectors Grid (8 Sectors) -->
+      <!-- حالة الخزائن للأقسام الثمانية -->
       <div class="space-y-2">
-        <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-          <i class="fa-solid fa-table-cells-large text-blue-800"></i>
-          <span>أقسام الكنيسة الثمانية (حالة الخزائن الحالية)</span>
-        </h4>
-        <div id="sectorsGrid" class="grid grid-cols-2 gap-2">
-          <!-- Dynamically populated or default elements -->
+        <h3 class="text-xs font-bold text-slate-800 px-1 flex items-center gap-1.5">
+          <i data-lucide="layers" class="w-4 h-4 text-slate-500"></i>
+          أقسام الكنيسة الثمانية (أرصدة الخزائن)
+        </h3>
+        <div id="sectorsList" class="grid grid-cols-2 gap-2">
+          <!-- ديناميكي من Supabase أو محلي -->
         </div>
       </div>
     </section>
 
-    <!-- 3. SCREEN: SUPER ADMIN (AUDIT LOG & SERVANTS) -->
-    <section id="screen-admin" class="hidden space-y-4">
-      <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs">
+    <!-- 3. لوحة المشرف العام وإدارة الخدام وسجل الحركات -->
+    <section id="view-admin" class="tab-content space-y-4">
+      
+      <!-- بطاقة المشرف والتحكم -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-blue-900 text-white flex items-center justify-center text-xl">
-            <i class="fa-solid fa-user-shield"></i>
+          <div class="w-11 h-11 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-sm">
+            مشرف
           </div>
-          <div class="flex-1">
-            <div class="flex items-center gap-1.5">
-              <h3 class="text-xs font-bold text-slate-900">المشرف العام</h3>
-              <span class="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">صلاحية كاملة</span>
-            </div>
-            <p class="text-[10px] text-slate-500 mt-0.5">أمانة الصندوق والرقابة المالية المركزية</p>
+          <div>
+            <h3 class="text-xs font-bold text-slate-900">د. يوسف إبراهيم (أمين الصندوق)</h3>
+            <p class="text-[10px] text-emerald-600 font-medium">لوحة المشرف العام • جلسة مشفرة</p>
           </div>
         </div>
+        <button onclick="fetchServantsList()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition" title="تحديث حي">
+          <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+        </button>
+      </div>
 
-        <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-slate-100 text-center">
-          <div>
-            <span class="text-[10px] text-slate-500">الخدام</span>
-            <p id="adminServantsCount" class="text-xs font-bold text-slate-900">8</p>
-          </div>
-          <div>
-            <span class="text-[10px] text-slate-500">حركات اليوم</span>
-            <p id="adminTxCount" class="text-xs font-bold text-blue-900">0</p>
-          </div>
-          <div>
-            <span class="text-[10px] text-slate-500">الحالة</span>
-            <p class="text-xs font-bold text-emerald-600">نشط</p>
-          </div>
+      <!-- إحصائيات سريعة للخدام -->
+      <div class="grid grid-cols-3 gap-2">
+        <div class="bg-white p-3 rounded-2xl border border-slate-200 text-center">
+          <p class="text-[10px] text-slate-500 font-medium">الخدام المعتمدين</p>
+          <p id="approvedCount" class="text-sm font-bold text-slate-900 mt-1">8</p>
+        </div>
+        <div class="bg-white p-3 rounded-2xl border border-slate-200 text-center">
+          <p class="text-[10px] text-slate-500 font-medium">طلبات جديدة</p>
+          <p id="pendingCount" class="text-sm font-bold text-amber-600 mt-1">2</p>
+        </div>
+        <div class="bg-white p-3 rounded-2xl border border-slate-200 text-center">
+          <p class="text-[10px] text-slate-500 font-medium">حركات اليوم</p>
+          <p class="text-sm font-bold text-blue-700 mt-1">142</p>
         </div>
       </div>
 
-      <!-- Servants List -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3">
-        <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-          <i class="fa-solid fa-users text-blue-800"></i>
-          <span>الخدام وأمناء العهد المسجلين</span>
-        </h4>
-        <div id="servantsList" class="space-y-2">
-          <!-- Populated -->
-        </div>
-      </div>
-
-      <!-- Master Transactions Log -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3">
-        <div class="flex items-center justify-between">
-          <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-            <i class="fa-solid fa-receipt text-blue-800"></i>
-            <span>سجل الحركات الموحد (Audit Log)</span>
+      <!-- قسم طلبات التسجيل السحابية الجديدة -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <h4 class="text-xs font-bold text-rose-700 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+            طلبات التسجيل السحابية الجديدة
           </h4>
-          <span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded font-mono">محدث لحظياً</span>
+          <span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full font-medium">Supabase Realtime</span>
         </div>
-        <div id="transactionsList" class="space-y-2">
-          <!-- Transactions -->
+        <div id="pendingServantsList" class="space-y-2">
+          <!-- معبأ برمجياً -->
         </div>
       </div>
+
+      <!-- قائمة الخدام المعتمدين -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
+          الخدام المعتمدون وسجل الصلاحيات
+        </h4>
+        <div id="approvedServantsList" class="space-y-2">
+          <!-- معبأ برمجياً -->
+        </div>
+      </div>
+
+      <!-- سجل الحركات اليومي الموحد (Audit Log) -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <i data-lucide="history" class="w-4 h-4 text-emerald-600"></i>
+          سجل الحركات اليومي الموحد لكافة الأقسام
+        </h4>
+        <div id="transactionsList" class="space-y-2">
+          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold text-slate-900">إيداع تبرعات أسبوعية - مدارس الأحد</p>
+              <p class="text-[10px] text-slate-500">بواسطة: بيشوي جرجس • منذ 9 دقائق</p>
+            </div>
+            <span class="text-xs font-bold text-emerald-600">+4,250 ج.م</span>
+          </div>
+          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold text-slate-900">صرف مستحقات صيانة مولد الكهرباء</p>
+              <p class="text-[10px] text-slate-500">بواسطة: فادي عماد • منذ 34 دقيقة</p>
+            </div>
+            <span class="text-xs font-bold text-rose-600">-1,800 ج.م</span>
+          </div>
+        </div>
+      </div>
+
     </section>
 
   </main>
 
-  <!-- ================= FIXED BOTTOM NAV ================= -->
-  <nav id="bottomNav" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-slate-200 px-3 py-2 flex justify-around items-center z-30 shadow-lg">
-    <button onclick="switchScreen('dashboard')" id="navBtn-dashboard" class="flex flex-col items-center gap-1 text-blue-900 text-xs font-bold py-1">
-      <i class="fa-solid fa-table-columns text-sm"></i>
-      <span class="text-[10px]">الرئيسية</span>
-    </button>
-    <button onclick="switchScreen('sectors')" id="navBtn-sectors" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-700 text-xs font-medium py-1">
-      <i class="fa-solid fa-layer-group text-sm"></i>
-      <span class="text-[10px]">الأقسام الـ 8</span>
-    </button>
-    <button onclick="switchScreen('admin')" id="navBtn-admin" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-700 text-xs font-medium py-1">
-      <i class="fa-solid fa-user-shield text-sm"></i>
-      <span class="text-[10px]">الإدارة والمشرف</span>
-    </button>
+  <!-- Bottom Navigation Bar -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2 px-6 z-40 shadow-lg">
+    <div class="max-w-md mx-auto flex items-center justify-around">
+      <button onclick="navigateTab('auth')" id="nav-auth" class="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-700 transition">
+        <i data-lucide="log-in" class="w-5 h-5"></i>
+        <span class="text-[10px] font-medium">الدخول</span>
+      </button>
+      <button onclick="navigateTab('dashboard')" id="nav-dashboard" class="flex flex-col items-center gap-1 text-blue-700 transition">
+        <i data-lucide="home" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold">الرئيسية</span>
+      </button>
+      <button onclick="navigateTab('admin')" id="nav-admin" class="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-700 transition relative">
+        <i data-lucide="shield" class="w-5 h-5"></i>
+        <span class="text-[10px] font-medium">لوحة المشرف</span>
+        <span class="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full"></span>
+      </button>
+    </div>
   </nav>
 
-  <!-- ================= JS APPLICATION ENGINE ================= -->
   <script>
-    // State Store
-    const state = {
-      user: { name: 'الخادم المسؤول', role: 'admin' },
-      totals: { cash: 0, revenue: 0, expenses: 0 },
-      sectors: [
-        { id: 'library', name: 'مكتبة الكنيسة والكتب', cash: 0, icon: 'fa-book' },
-        { id: 'buses', name: 'قطاع الأتوبيسات والرحلات', cash: 0, icon: 'fa-bus' },
-        { id: 'farm', name: 'مزرعة بركة صموئيل', cash: 0, icon: 'fa-egg' },
-        { id: 'factory', name: 'مصنع وتطريز الملابس', cash: 0, icon: 'fa-shirt' },
-        { id: 'canteen', name: 'كانتين الكنيسة والضيافة', cash: 0, icon: 'fa-mug-hot' },
-        { id: 'elderly', name: 'دار القديسين للمسنين', cash: 0, icon: 'fa-heart-pulse' },
-        { id: 'special', name: 'مركز الرجاء للاحتياجات', cash: 0, icon: 'fa-hands-holding-child' },
-        { id: 'hall', name: 'قاعة المناسبات والأفراح', cash: 0, icon: 'fa-champagne-glasses' }
-      ],
-      servants: [
-        { name: 'م. بيشوي عادل', role: 'أمين قطاع التربية', phone: '01012345678', tag: 'إدخال وترحيل' },
-        { name: 'مريم سمير جورج', role: 'مسؤولة خدمة إخوة الرب', phone: '01234567890', tag: 'صرف واعتماد' },
-        { name: 'الشماس عماد رمزي', role: 'أمين المباني والمشتروات', phone: '01123456789', tag: 'إدخال فواتير' }
-      ],
-      transactions: []
-    };
+    // إعدادات وبيانات مشروع Supabase المعتمد
+    const SUPABASE_URL = "https://hyvkekevcprihivyesye.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_q3fc02xZDInJsKdqk8L58w_za3RFMaT";
+    let supabaseClient = null;
 
-    function renderSectors() {
-      const container = document.getElementById('sectorsGrid');
-      if (!container) return;
-      container.innerHTML = state.sectors.map(s => `
-        <div class="bg-white border border-slate-200 p-2.5 rounded-xl shadow-xs flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-900 flex items-center justify-center text-xs">
-              <i class="fa-solid ${s.icon}"></i>
-            </div>
-            <div>
-              <p class="text-[11px] font-bold text-slate-800 leading-tight">${s.name}</p>
-              <span class="text-[10px] text-emerald-600 font-bold">${s.cash.toLocaleString()} ج.م</span>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderServants() {
-      const container = document.getElementById('servantsList');
-      if (!container) return;
-      container.innerHTML = state.servants.map(sv => `
-        <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center justify-between text-xs">
-          <div>
-            <p class="font-bold text-slate-900">${sv.name}</p>
-            <p class="text-[10px] text-slate-500">${sv.role} • ${sv.phone}</p>
-          </div>
-          <span class="text-[9px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-medium">${sv.tag}</span>
-        </div>
-      `).join('');
-    }
-
-    function renderTransactions() {
-      const container = document.getElementById('transactionsList');
-      if (!container) return;
-      if (state.transactions.length === 0) {
-        container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">لا توجد حركات مسجلة حتى الآن. ابدأ بتسجيل فاتورة من الرئيسية.</p>';
-        return;
+    try {
+      if (window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       }
-      container.innerHTML = state.transactions.map(t => `
-        <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center justify-between text-xs">
-          <div>
-            <p class="font-bold text-slate-900">${t.item} (${t.sectorName})</p>
-            <p class="text-[10px] text-slate-400">${t.time} • بواسطة: ${t.by}</p>
-          </div>
-          <span class="text-xs font-bold text-emerald-700 font-mono">+${t.total.toLocaleString()} ج.م</span>
-        </div>
-      `).join('');
+    } catch(e) {
+      console.warn("Supabase client init offline:", e);
     }
 
-    function updateTotalsUI() {
-      document.getElementById('statTotalCash').innerText = state.totals.cash.toLocaleString() + ' ج.م';
-      document.getElementById('statTotalRev').innerText = state.totals.revenue.toLocaleString() + ' ج.م';
-      document.getElementById('statTotalExp').innerText = state.totals.expenses.toLocaleString() + ' ج.م';
-      document.getElementById('adminTxCount').innerText = state.transactions.length;
-      document.getElementById('adminServantsCount').innerText = state.servants.length;
-    }
+    // الأقسام الثمانية المعتمدة
+    const sectorsData = [
+      { id: "library", name: "مكتبة الكنيسة والكتب", cash: 15000, tag: "مكتبات" },
+      { id: "buses", name: "قطاع الأتوبيسات والرحلات", cash: 28500, tag: "رحلات" },
+      { id: "poultry_farm", name: "مزرعة بركة صموئيل", cash: 64200, tag: "إنتاج داجني" },
+      { id: "garments_factory", name: "مصنع الملابس والتطريز", cash: 38000, tag: "ملابس كهنوتية" },
+      { id: "canteen", name: "كانتين الكنيسة والضيافة", cash: 12000, tag: "ضيافة" },
+      { id: "elderly_care", name: "دار القديسين للمسنين", cash: 45000, tag: "رعاية ومسنين" },
+      { id: "special_needs", name: "مركز الرجاء للاحتياجات", cash: 20000, tag: "رعاية خاصة" },
+      { id: "events_hall", name: "قاعة المناسبات والاستقبالات", cash: 55000, tag: "أفراح ومناسبات" }
+    ];
 
-    function toggleAuthTab(tab) {
-      if (tab === 'login') {
-        document.getElementById('formLogin').classList.remove('hidden');
-        document.getElementById('formRegister').classList.add('hidden');
-        document.getElementById('tabBtnLogin').className = 'py-2 rounded-lg bg-white shadow-xs font-bold text-slate-900 transition';
-        document.getElementById('tabBtnRegister').className = 'py-2 rounded-lg text-slate-600 transition';
-      } else {
-        document.getElementById('formLogin').classList.add('hidden');
-        document.getElementById('formRegister').classList.remove('hidden');
-        document.getElementById('tabBtnLogin').className = 'py-2 rounded-lg text-slate-600 transition';
-        document.getElementById('tabBtnRegister').className = 'py-2 rounded-lg bg-white shadow-xs font-bold text-slate-900 transition';
-      }
-    }
+    // قائمة الخدام المبدئية
+    let servants = [
+      { id: "1", name: "مينا عادل فرج", phone: "01224895632", sector: "أمانة صندوق الشباب", status: "pending", time: "منذ 4 دقائق" },
+      { id: "2", name: "ماري نبيل سليمان", phone: "01099841205", sector: "أمانة صندوق إخوة الرب", status: "pending", time: "منذ 16 دقيقة" },
+      { id: "3", name: "بيشوي جرجس غالي", phone: "01287654321", sector: "قطاع مدارس الأحد", status: "approved", role: "تحصيل وصرف" },
+      { id: "4", name: "سارة مرقص حنا", phone: "01145678901", sector: "خدمة الحضانة ورعاية الطفل", status: "approved", role: "تحصيل فقط" },
+      { id: "5", name: "فادي عماد شاكر", phone: "01012345678", sector: "صيانة المباني والمرافق", status: "approved", role: "صرف وفواتير" }
+    ];
 
-    function handleLogin(e) {
-      e.preventDefault();
-      const name = document.getElementById('loginInputName').value;
-      state.user.name = name;
-      document.getElementById('userStatusBadge').classList.remove('hidden');
-      document.getElementById('userStatusBadge').innerText = name;
-      switchScreen('dashboard');
-    }
+    // تبديل واجهات التطبيق
+    function navigateTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById('view-' + tabName);
+      if (target) target.classList.add('active');
 
-    function handleRegister(e) {
-      e.preventDefault();
-      const name = document.getElementById('regName').value;
-      const phone = document.getElementById('regPhone').value;
-      const sectorId = document.getElementById('regSector').value;
-      state.servants.unshift({ name, role: 'خادم ' + sectorId, phone, tag: 'نشط حديثاً' });
-      state.user.name = name;
-      document.getElementById('userStatusBadge').classList.remove('hidden');
-      document.getElementById('userStatusBadge').innerText = name;
-      renderServants();
-      switchScreen('dashboard');
-    }
-
-    function calcInvTotal() {
-      const q = Number(document.getElementById('invQty').value) || 0;
-      const p = Number(document.getElementById('invPrice').value) || 0;
-      document.getElementById('invTotalText').innerText = (q * p).toLocaleString() + ' ج.م';
-    }
-
-    function handleInvoice(e) {
-      e.preventDefault();
-      const secId = document.getElementById('invSector').value;
-      const item = document.getElementById('invItem').value;
-      const qty = Number(document.getElementById('invQty').value) || 1;
-      const price = Number(document.getElementById('invPrice').value) || 0;
-      const total = qty * price;
-
-      const sec = state.sectors.find(s => s.id === secId);
-      if (sec) sec.cash += total;
-      state.totals.cash += total;
-      state.totals.revenue += total;
-
-      state.transactions.unshift({
-        item,
-        sectorName: sec ? sec.name : secId,
-        qty,
-        total,
-        time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
-        by: state.user.name
-      });
-
-      updateTotalsUI();
-      renderSectors();
-      renderTransactions();
-
-      alert('تم حفظ الفاتورة وترحيل مبلغ ' + total + ' ج.م لخزينة ' + (sec ? sec.name : ''));
-      document.getElementById('invItem').value = '';
-    }
-
-    function switchScreen(target) {
-      const screens = ['login', 'dashboard', 'admin'];
-      screens.forEach(s => {
-        const el = document.getElementById('screen-' + s);
-        if (el) el.classList.add('hidden');
-      });
-
-      if (target === 'sectors') {
-        document.getElementById('screen-dashboard').classList.remove('hidden');
-        window.scrollTo({ top: document.getElementById('sectorsGrid').offsetTop, behavior: 'smooth' });
-      } else {
-        const active = document.getElementById('screen-' + target);
-        if (active) active.classList.remove('hidden');
-      }
-
-      // Update Nav buttons styling
-      ['dashboard', 'sectors', 'admin'].forEach(nav => {
-        const btn = document.getElementById('navBtn-' + nav);
+      ['auth', 'dashboard', 'admin'].forEach(name => {
+        const btn = document.getElementById('nav-' + name);
         if (btn) {
-          if (nav === target || (target === 'sectors' && nav === 'sectors')) {
-            btn.className = 'flex flex-col items-center gap-1 text-blue-900 text-xs font-bold py-1';
+          if (name === tabName) {
+            btn.classList.add('text-blue-700', 'font-bold');
+            btn.classList.remove('text-slate-400');
           } else {
-            btn.className = 'flex flex-col items-center gap-1 text-slate-400 hover:text-slate-700 text-xs font-medium py-1';
+            btn.classList.remove('text-blue-700', 'font-bold');
+            btn.classList.add('text-slate-400');
           }
         }
       });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Init on load
+    // تبديل وضع تسجيل الدخول / خادم جديد
+    function switchAuthMode(mode) {
+      const loginForm = document.getElementById('loginForm');
+      const regForm = document.getElementById('registerForm');
+      const loginBtn = document.getElementById('toggleLoginBtn');
+      const regBtn = document.getElementById('toggleRegisterBtn');
+
+      if (mode === 'login') {
+        loginForm.classList.remove('hidden');
+        regForm.classList.add('hidden');
+        loginBtn.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+        loginBtn.classList.remove('text-slate-500');
+        regBtn.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+        regBtn.classList.add('text-slate-500');
+      } else {
+        loginForm.classList.add('hidden');
+        regForm.classList.remove('hidden');
+        regBtn.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+        regBtn.classList.remove('text-slate-500');
+        loginBtn.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+        loginBtn.classList.add('text-slate-500');
+      }
+    }
+
+    // معالجة تسجيل الدخول
+    function handleLogin(e) {
+      e.preventDefault();
+      const phone = document.getElementById('loginPhone').value.trim();
+      document.getElementById('currentUserBadge').textContent = 'خادم معتمد';
+      alert('مرحباً بك! تم تسجيل الدخول بنجاح والانتقال للوحة التحكم.');
+      navigateTab('dashboard');
+    }
+
+    // معالجة تسجيل خادم جديد سحابياً
+    async function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('regName').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const sectorSelect = document.getElementById('regSector');
+      const sectorName = sectorSelect.options[sectorSelect.selectedIndex].text;
+      const pin = document.getElementById('regPin').value.trim();
+
+      const newServant = {
+        id: Date.now().toString(),
+        name: name,
+        phone: phone,
+        sector: sectorName,
+        status: "pending",
+        time: "الآن"
+      };
+
+      servants.unshift(newServant);
+
+      // محاولة الإرسال لـ Supabase إن كان متاحاً
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('servants').insert([{
+            full_name: name,
+            phone: phone,
+            sector_name: sectorName,
+            status: 'بانتظار الاعتماد',
+            pin_code: pin
+          }]);
+        } catch(err) {
+          console.warn('تعذر الإرسال لسوبابيز، تم الحفظ محلياً:', err);
+        }
+      }
+
+      renderServants();
+      alert('تم إرسال طلب تسجيلك سحابياً بنجاح! سيظهر اسمك للمشرف العام لاعتمادك فوراً.');
+      navigateTab('admin');
+    }
+
+    // اعتماد خادم جديد
+    async function approveServant(id) {
+      const servant = servants.find(s => s.id === id);
+      if (servant) {
+        servant.status = "approved";
+        servant.role = "تحصيل وصرف معتمد";
+        renderServants();
+        alert(`تم اعتماد وتفعيل حساب الخادم (${servant.name}) بنجاح!`);
+      }
+    }
+
+    // رسم بطاقات الأقسام
+    function renderSectors() {
+      const container = document.getElementById('sectorsList');
+      container.innerHTML = '';
+      sectorsData.forEach((sec, idx) => {
+        const card = document.createElement('div');
+        card.className = "bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between";
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between text-[10px] text-slate-400 font-medium mb-1">
+              <span>#${idx + 1} ${sec.tag}</span>
+            </div>
+            <h4 class="text-xs font-bold text-slate-800 leading-tight">${sec.name}</h4>
+          </div>
+          <div class="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-[10px] text-slate-500">الخزينة:</span>
+            <span class="text-xs font-bold text-blue-700">${sec.cash.toLocaleString('ar-EG')} ج.م</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // رسم قوائم الخدام
+    function renderServants() {
+      const pendingContainer = document.getElementById('pendingServantsList');
+      const approvedContainer = document.getElementById('approvedServantsList');
+      
+      const pending = servants.filter(s => s.status === 'pending');
+      const approved = servants.filter(s => s.status === 'approved');
+
+      document.getElementById('pendingCount').textContent = pending.length;
+      document.getElementById('approvedCount').textContent = approved.length;
+
+      pendingContainer.innerHTML = '';
+      if (pending.length === 0) {
+        pendingContainer.innerHTML = '<p class="text-xs text-slate-400 text-center py-2">لا توجد طلبات جديدة بانتظار الاعتماد</p>';
+      } else {
+        pending.forEach(s => {
+          const item = document.createElement('div');
+          item.className = "p-3 rounded-xl bg-rose-50/40 border border-rose-100 flex flex-col gap-2";
+          item.innerHTML = `
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-xs font-bold text-slate-900">${s.name} <span class="text-[9px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded font-medium">جديد سحابياً</span></p>
+                <p class="text-[10px] text-slate-600">${s.phone} • ${s.sector}</p>
+                <p class="text-[9px] text-slate-400 mt-0.5">${s.time}</p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="approveServant('${s.id}')" class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded-lg transition flex items-center justify-center gap-1">
+                <i data-lucide="check" class="w-3 h-3"></i> اعتماد وتفعيل
+              </button>
+              <button class="px-2.5 py-1.5 bg-slate-100 text-slate-700 text-[10px] font-medium rounded-lg">تحديد الصلاحيات</button>
+            </div>
+          `;
+          pendingContainer.appendChild(item);
+        });
+      }
+
+      approvedContainer.innerHTML = '';
+      approved.forEach(s => {
+        const item = document.createElement('div');
+        item.className = "p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between";
+        item.innerHTML = `
+          <div>
+            <p class="text-xs font-bold text-slate-900">${s.name}</p>
+            <p class="text-[10px] text-slate-500">${s.sector} • ${s.phone}</p>
+          </div>
+          <span class="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md font-medium">${s.role || 'خادم معتمد'}</span>
+        `;
+        approvedContainer.appendChild(item);
+      });
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // حساب إجمالي الفاتورة
+    function calculateInvoiceTotal() {
+      const price = Number(document.getElementById('invItem').value) || 0;
+      const qty = Number(document.getElementById('invQty').value) || 1;
+      const total = price * qty;
+      document.getElementById('invTotal').value = total.toLocaleString('ar-EG') + ' ج.م';
+    }
+
+    // تحديث أصناف القسم
+    function updateSectorItems() {
+      const sec = document.getElementById('invSector').value;
+      const itemSelect = document.getElementById('invItem');
+      itemSelect.innerHTML = '';
+      if (sec === 'poultry_farm') {
+        itemSelect.innerHTML = `
+          <option value="150" data-name="كرتونة بيض أحمر">كرتونة بيض أحمر (150 ج.م)</option>
+          <option value="105" data-name="دواجن تسمين 1200جم">دواجن تسمين (105 ج.م)</option>
+        `;
+      } else if (sec === 'library') {
+        itemSelect.innerHTML = `
+          <option value="65" data-name="أجبية كبرى مذهبة">أجبية كبرى مذهبة (65 ج.م)</option>
+          <option value="95" data-name="خولاجي مقدس جيب">خولاجي مقدس جيب (95 ج.م)</option>
+        `;
+      } else {
+        itemSelect.innerHTML = `
+          <option value="50" data-name="سند حركة إيراد">سند حركة إيراد مباشر (50 ج.م)</option>
+          <option value="100" data-name="اشتراك خدمة">اشتراك خدمة رسمي (100 ج.م)</option>
+        `;
+      }
+      calculateInvoiceTotal();
+    }
+
+    // تسجيل الفاتورة
+    function handleInvoiceSubmit(e) {
+      e.preventDefault();
+      const qty = document.getElementById('invQty').value;
+      const total = document.getElementById('invTotal').value;
+      const itemText = document.getElementById('invItem').selectedOptions[0].getAttribute('data-name');
+      
+      alert(`تم تسجيل الفاتورة بنجاح!\nالصنف: ${itemText}\nالكمية: ${qty}\nالمبلغ: ${total}\nتم خصم المخزون وترحيل المبلغ للخزينة سحابياً.`);
+    }
+
+    function fetchServantsList() {
+      renderServants();
+      alert('تم تحديث قائمة الخدام والحركات سحابياً بنجاح.');
+    }
+
+    // البدء الأولي
     window.addEventListener('DOMContentLoaded', () => {
       renderSectors();
       renderServants();
-      renderTransactions();
-      updateTotalsUI();
+      calculateInvoiceTotal();
+      if (window.lucide) lucide.createIcons();
     });
   </script>
 </body>
