@@ -3,30 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>النظام المالي والمخزون الموحد - كنيسة الأنبا صموئيل المعترف</title>
+  <title>النظام المالي والمحاسبي الموحد - كنيسة الأنبا صموئيل المعترف</title>
   
-  <!-- خط Cairo والتنسيقات وأيقونات FontAwesome -->
+  <!-- خط Cairo وخط Noto Sans وأيقونات FontAwesome وتنسيقات Tailwind -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+Arabic:wght@400;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <!-- ملفات PWA للتثبيت على الهاتف -->
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0f172a">
 
   <style>
-    body { font-family: 'Cairo', sans-serif; }
-    .badge-gold { background: linear-gradient(135deg, #d97706, #b45309); }
+    body { font-family: 'Cairo', 'Noto Sans Arabic', sans-serif; background-color: #0b1120; }
     .card-hover { transition: all 0.25s ease; }
     .card-hover:hover { transform: translateY(-3px); }
+    .sector-btn-active { border-color: #3b82f6 !important; background-color: rgba(30, 58, 138, 0.4) !important; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+    .action-btn-active { background: linear-gradient(135deg, #2563eb, #1d4ed8) !important; color: #ffffff !important; border-color: #60a5fa !important; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen antialiased flex flex-col justify-between">
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased flex flex-col justify-between selection:bg-blue-600 selection:text-white">
 
-  <!-- ==================== شريط الإشعارات والتثبيت (PWA Banner) ==================== -->
-  <div id="pwa-install-banner" class="bg-blue-600/90 text-white px-4 py-2 text-sm flex items-center justify-between shadow-lg">
+  <!-- شريط PWA لتثبيت التطبيق على الموبايل -->
+  <div id="pwa-install-banner" class="bg-blue-600/90 text-white px-4 py-2 text-xs sm:text-sm flex items-center justify-between shadow-lg">
     <div class="flex items-center gap-2">
       <i class="fa-solid fa-mobile-screen-button text-amber-300"></i>
       <span>تثبيت التطبيق على الشاشة الرئيسية للهاتف للوصول السريع بدون متصفح</span>
@@ -36,83 +36,75 @@
     </button>
   </div>
 
-  <!-- ==================== رأس الصفحة (Header) ==================== -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-40 px-4 lg:px-8 py-3.5">
+  <!-- رأس الصفحة العلوي (Header) -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-40 px-4 lg:px-8 py-3">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-xl font-bold shadow-inner">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-xl font-bold shadow-inner">
           <i class="fa-solid fa-church"></i>
         </div>
         <div>
-          <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
+          <h1 class="text-sm sm:text-base font-black tracking-tight text-white flex items-center gap-2">
             كنيسة القديس الأنبا صموئيل المعترف
             <span class="text-[10px] bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 px-2 py-0.5 rounded-full font-bold">
-              متصل سحابياً ⚡
+              متصل لحظياً ⚡
             </span>
           </h1>
-          <p class="text-xs text-slate-400">منظومة الحسابات والمخزون الموحدة للأقسام الثمانية</p>
+          <p class="text-[11px] text-slate-400">منظومة الحسابات والمخزون الموحدة للأقسام الثمانية</p>
         </div>
       </div>
 
-      <!-- معلومات الخادم الحالي وزر تسجيل الخروج -->
-      <div id="user-header-info" class="hidden sm:flex items-center gap-3">
-        <div class="text-left">
+      <!-- معلومات الخادم النشط وزر التبديل -->
+      <div id="user-header-info" class="flex items-center gap-2.5">
+        <div class="text-left hidden sm:block">
           <div id="current-servant-name" class="text-xs font-bold text-slate-200">الخادم المسؤول</div>
           <div id="current-servant-role" class="text-[10px] text-amber-400">أمين عهدة معتمد</div>
         </div>
-        <button onclick="toggleView('login')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 border border-slate-700 flex items-center justify-center text-xs text-slate-400 transition" title="تبديل الخادم / خروج">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <button onclick="toggleView('login')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 flex items-center gap-1.5 transition" title="تبديل الخادم">
+          <i class="fa-solid fa-user-gear text-amber-400"></i>
+          <span>الخادم</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- ==================== 1. شاشة تسجيل الدخول وإنشاء حساب خادم ==================== -->
-  <main id="login-view" class="flex-1 flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+  <!-- 1. شاشة تسجيل الدخول / تبديل الخادم -->
+  <main id="login-view" class="hidden flex-1 flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl text-right">
       <div class="text-center mb-6">
-        <div class="w-16 h-16 bg-gradient-to-tr from-amber-600 to-amber-400 rounded-2xl mx-auto flex items-center justify-center text-2xl text-slate-950 font-black shadow-lg shadow-amber-500/20 mb-3">
+        <div class="w-14 h-14 bg-gradient-to-tr from-amber-600 to-amber-400 rounded-2xl mx-auto flex items-center justify-center text-2xl text-slate-950 font-black shadow-lg shadow-amber-500/20 mb-3">
           <i class="fa-solid fa-cross"></i>
         </div>
-        <h2 class="text-xl font-black text-white">تسجيل دخول الخدام</h2>
-        <p class="text-xs text-slate-400 mt-1">برنامج الإدارة المالية والمخزنية لكنيسة الأنبا صموئيل</p>
+        <h2 class="text-lg font-black text-white">تسجيل خادم / أمين عهدة</h2>
+        <p class="text-xs text-slate-400 mt-1">كنيسة القديس الأنبا صموئيل المعترف</p>
       </div>
 
-      <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+      <form onsubmit="handleLogin(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">اسم الخادم ثلاثي</label>
-          <div class="relative">
-            <i class="fa-solid fa-user absolute right-3 top-3 text-slate-500 text-xs"></i>
-            <input type="text" id="login-name" required placeholder="مثال: ميخائيل جورج فرج" 
-                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-9 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500">
-          </div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">اسم الخادم ثلاثي</label>
+          <input type="text" id="login-name" required placeholder="مثال: ميخائيل جورج فرج" 
+                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500">
         </div>
-
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">رقم الهاتف (للتواصل وتأكيد الحركات)</label>
-          <div class="relative">
-            <i class="fa-solid fa-phone absolute right-3 top-3 text-slate-500 text-xs"></i>
-            <input type="tel" id="login-phone" required placeholder="01xxxxxxxxx" 
-                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-9 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 text-left" dir="ltr">
-          </div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">رقم الهاتف (WhatsApp)</label>
+          <input type="tel" id="login-phone" required placeholder="01xxxxxxxxx" dir="ltr"
+                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 text-left">
         </div>
-
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">القسم المسؤول عنه</label>
-          <select id="login-sector" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+          <label class="block text-xs font-bold text-slate-300 mb-1">القسم المسؤول عنه</label>
+          <select id="login-sector" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+            <option value="library">1. مكتبة الكنيسة ومنافذ بيع الكتب</option>
+            <option value="buses">2. قطاع الأتوبيسات والرحلات الديرية</option>
+            <option value="farm">3. مزرعة بركة صموئيل للدواجن والبيض</option>
+            <option value="garments">4. مصنع وتطريز الملابس الكنسية</option>
+            <option value="canteen">5. كانتين الكنيسة وقاعة الضيافة</option>
+            <option value="elderly">6. دار القديسين لرعاية المسنين</option>
+            <option value="special_needs">7. مركز الرجاء لذوي الاحتياجات الخاصة</option>
+            <option value="hall">8. قاعة المناسبات واستقبالات الأفراح</option>
             <option value="all">كافة الأقسام (أمين الصندوق العام / مشرف)</option>
-            <option value="library">مكتبة الكنيسة ومنافذ بيع الكتب</option>
-            <option value="buses">قطاع الأتوبيسات والرحلات الديرية</option>
-            <option value="poultry_farm">مزرعة بركة صموئيل للدواجن والبيض</option>
-            <option value="garments_factory">مصنع وتطريز الملابس الكنسية</option>
-            <option value="canteen">كانتين الكنيسة وقاعة الضيافة</option>
-            <option value="elderly_care">دار القديسين لرعاية المسنين</option>
-            <option value="special_needs">مركز الرجاء لذوي الاحتياجات الخاصة</option>
-            <option value="events_hall">قاعة المناسبات واستقبالات الأفراح</option>
           </select>
         </div>
-
-        <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3 rounded-xl shadow-lg shadow-amber-500/20 text-sm flex items-center justify-center gap-2 transition active:scale-[0.98]">
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
           <i class="fa-solid fa-right-to-bracket"></i>
           دخول لوحة التحكم والبدء
         </button>
@@ -120,220 +112,217 @@
     </div>
   </main>
 
-  <!-- ==================== 2. لوحة التحكم والأقسام الثمانية (Dashboard) ==================== -->
-  <main id="dashboard-view" class="hidden flex-1 max-w-7xl mx-auto w-full px-4 lg:px-8 py-6 space-y-6">
+  <!-- 2. لوحة التحكم التفاعلية الكبرى (Dashboard) -->
+  <main id="dashboard-view" class="flex-1 max-w-7xl mx-auto w-full px-4 lg:px-8 py-5 space-y-6">
 
     <!-- كروت إجمالي المؤشرات المالية العامة -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
-        <div class="absolute left-3 top-3 text-3xl text-emerald-500/10"><i class="fa-solid fa-vault"></i></div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg relative overflow-hidden">
         <div class="text-xs font-bold text-slate-400 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-          إجمالي أرصدة الخزائن الحالية (نقدية)
+          إجمالي أرصدة الخزائن (نقدية)
         </div>
-        <div id="total-cash" class="text-2xl sm:text-3xl font-black text-emerald-400 mt-2">0 ج.م</div>
-        <div class="text-[11px] text-slate-500 mt-1">محدثة لحظياً من الحركات الفردية</div>
+        <div id="total-cash" class="text-2xl font-black text-emerald-400 mt-1">0 ج.م</div>
+        <div class="text-[10px] text-slate-500 mt-0.5">محدثة لحظياً لكافة الخزائن</div>
       </div>
-
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
-        <div class="absolute left-3 top-3 text-3xl text-blue-500/10"><i class="fa-solid fa-arrow-trend-up"></i></div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg relative overflow-hidden">
         <div class="text-xs font-bold text-slate-400 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-          إجمالي مبيعات وإيرادات الأقسام
+          إجمالي الإيرادات والمبيعات
         </div>
-        <div id="total-revenue" class="text-2xl sm:text-3xl font-black text-blue-400 mt-2">0 ج.م</div>
-        <div class="text-[11px] text-slate-500 mt-1">إجمالي الحركات الواردة</div>
+        <div id="total-revenue" class="text-2xl font-black text-blue-400 mt-1">0 ج.م</div>
+        <div class="text-[10px] text-slate-500 mt-0.5">إجمالي الحركات الصادرة والواردة</div>
       </div>
-
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
-        <div class="absolute left-3 top-3 text-3xl text-rose-500/10"><i class="fa-solid fa-receipt"></i></div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg relative overflow-hidden">
         <div class="text-xs font-bold text-slate-400 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-          المصروفات وسندات الصرف
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          عدد الأصناف المسجلة
         </div>
-        <div id="total-expenses" class="text-2xl sm:text-3xl font-black text-rose-400 mt-2">0 ج.م</div>
-        <div class="text-[11px] text-slate-500 mt-1">مسحوبات الأقسام التشغيلية</div>
+        <div id="total-items-count" class="text-2xl font-black text-amber-400 mt-1">0 صنف</div>
+        <div class="text-[10px] text-slate-500 mt-0.5">إجمالي المخزون في الأقسام الثمانية</div>
       </div>
     </div>
 
-    <!-- بطاقة تسجيل فاتورة بيع جديدة وسريعة -->
-    <div class="bg-gradient-to-br from-slate-900 to-slate-900/90 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-800 gap-2">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
-          </div>
-          <div>
-            <h3 class="text-base font-bold text-white">تسجيل حركة / فاتورة بيع جديدة</h3>
-            <p class="text-xs text-slate-400">خصم الصنف آلياً من المخزن وإضافة المبلغ لخزينة القسم</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="openAddItemModal()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2 transition">
-            <i class="fa-solid fa-plus-circle"></i>
-            إضافة صنف جديد للمخزن
-          </button>
-        </div>
-      </div>
-
-      <form id="invoice-form" onsubmit="handleCreateInvoice(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">القسم التابع له</label>
-          <select id="inv-sector" onchange="loadSectorItemsForInvoice()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
-            <option value="poultry_farm">3. مزرعة بركة صموئيل (دواجن وبيض)</option>
-            <option value="library">1. مكتبة الكنيسة ومنافذ بيع الكتب</option>
-            <option value="buses">2. قطاع الأتوبيسات والرحلات</option>
-            <option value="garments_factory">4. مصنع وتطريز الملابس</option>
-            <option value="canteen">5. كانتين الكنيسة والضيافة</option>
-            <option value="elderly_care">6. دار القديسين للمسنين</option>
-            <option value="special_needs">7. مركز الرجاء للاحتياجات</option>
-            <option value="events_hall">8. قاعة المناسبات والأفراح</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">الصنف من المخزون</label>
-          <select id="inv-item" onchange="autoFillPrice()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
-            <option value="egg_red">كرتونة بيض مائدة أحمر سوبر (متاح: 480)</option>
-            <option value="poultry_frozen">دواجن تسمين مجمدة 1200 جم (متاح: 210)</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">الكمية المباعة</label>
-          <input type="number" id="inv-qty" value="1" min="1" oninput="calculateTotal()" 
-                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-amber-500">
-        </div>
-
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">سعر الوحدة (ج.م)</label>
-          <input type="number" id="inv-price" value="150" min="0" oninput="calculateTotal()" 
-                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-amber-500">
-        </div>
-
-        <div class="flex flex-col justify-end">
-          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 transition active:scale-95">
-            <i class="fa-solid fa-cloud-arrow-up"></i>
-            ترحيل الفاتورة (<span id="inv-total-display">150</span> ج.م)
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- بطاقات الأقسام الثمانية (Sectors Cards) -->
-    <div>
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-          <i class="fa-solid fa-boxes-stacked text-amber-400"></i>
-          أقسام الكنيسة الثمانية (حالة الخزائن والمخازن)
+    <!-- شريط الأقسام الثمانية (قابلة للنقر بالكامل لتبديل القسم فوراً) -->
+    <section>
+      <div class="flex items-center justify-between mb-2.5">
+        <h3 class="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-blue-400"></i>
+          <span>أقسام الكنيسة الثمانية (اضغط على أي قسم لفتح لوحته وأصنافه)</span>
         </h3>
-        <span class="text-xs text-slate-500">8 أقسام تشغيلية معتمدة</span>
+        <span class="text-[11px] text-slate-400">القسم المختار يحدد العمليات بالأسفل</span>
       </div>
 
-      <div id="sectors-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- يتم توليد الأقسام الثمانية عبر JavaScript تلقائياً لسهولة التحديث -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2" id="sectors-cards-container">
+        <!-- يتم رسم كروت الأقسام الثمانية وتحديثها ديناميكياً -->
       </div>
-    </div>
+    </section>
 
-  </main>
-
-  <!-- ==================== نافذة إضافة صنف جديد (Popup Modal) ==================== -->
-  <div id="add-item-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
-      <button onclick="closeAddItemModal()" class="w-7 h-7 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center absolute left-4 top-4 text-xs">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <div class="flex items-center gap-2.5 mb-4 text-amber-400 text-sm font-bold">
-        <i class="fa-solid fa-boxes-packing text-lg"></i>
-        <span>تسجيل صنف جديد وتحديد رصيد أول المدة</span>
-      </div>
-
-      <form id="new-item-form" onsubmit="handleAddNewItem(event)" class="space-y-3.5">
-        <div>
-          <label class="block text-xs text-slate-300 mb-1">القسم التابع له الصنف</label>
-          <select id="modal-sector" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200">
-            <option value="poultry_farm">مزرعة بركة صموئيل للدواجن والبيض</option>
-            <option value="library">مكتبة الكنيسة والكتب</option>
-            <option value="buses">قطاع الأتوبيسات والرحلات</option>
-            <option value="garments_factory">مصنع وتطريز الملابس</option>
-            <option value="canteen">كانتين الكنيسة وقاعة الضيافة</option>
-            <option value="elderly_care">دار المسنين</option>
-            <option value="special_needs">مركز الرجاء للاحتياجات</option>
-            <option value="events_hall">قاعة المناسبات</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-xs text-slate-300 mb-1">اسم الصنف الجديد</label>
-          <input type="text" id="modal-item-name" required placeholder="مثال: كرتونة بيض أبيض سوبر أو أجبية وسط" 
-                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs text-slate-300 mb-1">رصيد أول المدة (الكمية)</label>
-            <input type="number" id="modal-item-qty" required min="0" value="100" 
-                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center">
+    <!-- بطاقة القسم النشط والأدوات التشغيلية الخمس التفاعلية -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+      
+      <!-- عنوان القسم المختار حالياً -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center text-xl">
+            <i id="active-sec-icon" class="fa-solid fa-book-bible"></i>
           </div>
           <div>
-            <label class="block text-xs text-slate-300 mb-1">سعر البيع الافتراضي (ج.م)</label>
-            <input type="number" id="modal-item-price" required min="0" value="150" 
-                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center">
-          </div>
-        </div>
-
-        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 mt-2 transition">
-          <i class="fa-solid fa-check"></i>
-          حفظ الصنف في المخزون
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ==================== تذييل الصفحة (Footer) ==================== -->
-  <footer class="border-t border-slate-900 bg-slate-950 py-4 px-4 text-center text-xs text-slate-500">
-    النظام المالي والمحاسبي الموحد &copy; كنيسة القديس الأنبا صموئيل المعترف — جميع الحقوق محفوظة لبيت الرب
-  </footer>
-
-  <!-- ==================== البرمجة والتفاعل السحابي (JavaScript) ==================== -->
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-    // إعدادات الربط السحابي مع Supabase الخاصة بك
-    const SUPABASE_URL = "https://hyvkekevcprihivyesye.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_q3fc02xZDInJsKdqk8L58w_za3RFMaT";
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // بيانات الأقسام الثمانية
-    const SECTORS_DATA = [
-      { id: 'library', name: 'مكتبة الكنيسة والكتب', num: 1, tag: 'مكتبات', balance: 0, itemsCount: 12 },
-      { id: 'buses', name: 'قطاع الأتوبيسات والرحلات', num: 2, tag: 'رحلات ودير', balance: 0, itemsCount: 6 },
-      { id: 'poultry_farm', name: 'مزرعة بركة صموئيل', num: 3, tag: 'إنتاج داجني', balance: 0, itemsCount: 8, badge: 'الأعلى إنتاجاً' },
-      { id: 'garments_factory', name: 'مصنع الملابس والتطريز', num: 4, tag: 'ملابس كهنوتية', balance: 0, itemsCount: 15 },
-      { id: 'canteen', name: 'كانتين الكنيسة وقاعة الضيافة', num: 5, tag: 'ضيافة', balance: 0, itemsCount: 22 },
-      { id: 'elderly_care', name: 'دار القديسين للمسنين', num: 6, tag: 'رعاية ومسنين', balance: 0, itemsCount: 5 },
-      { id: 'special_needs', name: 'مركز الرجاء للاحتياجات', num: 7, tag: 'رعاية خاصة', balance: 0, itemsCount: 4 },
-      { id: 'events_hall', name: 'قاعة المناسبات والاستقبالات', num: 8, tag: 'أفراح ومناسبات', balance: 0, itemsCount: 7 }
-    ];
-
-    // قاعدة بيانات محلية للأصناف المتاحة
-    let localItems = [
-      { id: 'egg_red', sector: 'poultry_farm', name: 'كرتونة بيض مائدة أحمر سوبر', price: 150, stock: 480 },
-      { id: 'poultry_frozen', sector: 'poultry_farm', name: 'دواجن تسمين مجمدة 1200 جم', price: 105, stock: 210 },
-      { id: 'agpeya_large', sector: 'library', name: 'أجبية كبرى شمواه مذهبة', price: 65, stock: 95 },
-      { id: 'bus_ticket', sector: 'buses', name: 'تذكرة رحلة دير الأنبا صموئيل', price: 50, stock: 180 }
-    ];
-
-    // دالة رسم كروت الأقسام الثمانية
-    function renderSectorsGrid() {
-      const container = document.getElementById('sectors-grid');
-      container.innerHTML = SECTORS_DATA.map(sec => `
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 card-hover shadow flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-800 text-slate-300">${sec.tag}</span>
-              <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xs flex items-center justify-center">${sec.num}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-full font-bold">القسم النشط حالياً</span>
+              <h2 id="active-sec-title" class="text-base sm:text-lg font-black text-white">مكتبة الكنيسة ومنافذ بيع الكتب</h2>
             </div>
-            <h4 class="font-bold text-sm text-white">${sec.name}</h4>
-            <div class="text-xs text-slate-400 mt-1
+            <div class="text-xs text-slate-400 mt-0.5">
+              خزينة القسم الحالية: <span id="active-sec-cash" class="font-bold text-emerald-400 font-mono">0 ج.م</span>
+              <span class="mx-1.5 text-slate-600">•</span>
+              الأصناف المتوفرة: <span id="active-sec-items-count" class="font-bold text-slate-200">0 صنف</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="openModal('add-item-modal')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow transition">
+            <i class="fa-solid fa-plus-circle"></i>
+            <span>إضافة صنف جديد</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- الأيقونات / الأدوات التشغيلية الخمس التفاعلية (قابلة للنقر 100%) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+        
+        <!-- أداة 1: تسجيل الأصناف ورصيد أول المدة -->
+        <button onclick="switchTab('items')" id="btn-tab-items" class="action-btn p-3 rounded-xl border border-slate-700 bg-slate-950 text-right transition flex flex-col justify-between h-20 text-slate-200 hover:border-blue-500">
+          <div class="flex items-center justify-between">
+            <span class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs"><i class="fa-solid fa-boxes-stacked"></i></span>
+            <span class="text-[10px] font-bold text-slate-500">1</span>
+          </div>
+          <div>
+            <div class="text-xs font-black">الأصناف ورصيد أول المدة</div>
+            <div class="text-[10px] text-slate-400">إدخال، جرد، وتعديل</div>
+          </div>
+        </button>
+
+        <!-- أداة 2: تسجيل فاتورة بيع جديدة -->
+        <button onclick="switchTab('invoice')" id="btn-tab-invoice" class="action-btn p-3 rounded-xl border border-slate-700 bg-slate-950 text-right transition flex flex-col justify-between h-20 text-slate-200 hover:border-emerald-500">
+          <div class="flex items-center justify-between">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+            <span class="text-[10px] font-bold text-slate-500">2</span>
+          </div>
+          <div>
+            <div class="text-xs font-black">تسجيل فاتورة بيع جديدة</div>
+            <div class="text-[10px] text-slate-400">خصم المخزون والإيراد</div>
+          </div>
+        </button>
+
+        <!-- أداة 3: شراء وتوريد أصناف للمخزن -->
+        <button onclick="switchTab('purchase')" id="btn-tab-purchase" class="action-btn p-3 rounded-xl border border-slate-700 bg-slate-950 text-right transition flex flex-col justify-between h-20 text-slate-200 hover:border-indigo-500">
+          <div class="flex items-center justify-between">
+            <span class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs"><i class="fa-solid fa-cart-flatbed"></i></span>
+            <span class="text-[10px] font-bold text-slate-500">3</span>
+          </div>
+          <div>
+            <div class="text-xs font-black">شراء وتوريد أصناف</div>
+            <div class="text-[10px] text-slate-400">إيداع وزيادة المخزون</div>
+          </div>
+        </button>
+
+        <!-- أداة 4: الخزينة وحركات النقدية -->
+        <button onclick="switchTab('treasury')" id="btn-tab-treasury" class="action-btn p-3 rounded-xl border border-slate-700 bg-slate-950 text-right transition flex flex-col justify-between h-20 text-slate-200 hover:border-amber-500">
+          <div class="flex items-center justify-between">
+            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs"><i class="fa-solid fa-vault"></i></span>
+            <span class="text-[10px] font-bold text-slate-500">4</span>
+          </div>
+          <div>
+            <div class="text-xs font-black">الخزينة وحركات النقدية</div>
+            <div class="text-[10px] text-slate-400">كشف حساب وتقفيل</div>
+          </div>
+        </button>
+
+        <!-- أداة 5: التقارير الشاملة -->
+        <button onclick="switchTab('reports')" id="btn-tab-reports" class="action-btn p-3 rounded-xl border border-slate-700 bg-slate-950 text-right transition flex flex-col justify-between h-20 text-slate-200 hover:border-rose-500">
+          <div class="flex items-center justify-between">
+            <span class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs"><i class="fa-solid fa-chart-pie"></i></span>
+            <span class="text-[10px] font-bold text-slate-500">5</span>
+          </div>
+          <div>
+            <div class="text-xs font-black">التقارير الشاملة</div>
+            <div class="text-[10px] text-slate-400">أصناف وخزائن ومراجعة</div>
+          </div>
+        </button>
+
+      </div>
+
+      <!-- مساحة المحتوى التشغيلي المباشر (تتبدل بنقرة أيقونة) -->
+      <div class="bg-slate-950/80 rounded-xl p-4 sm:p-5 border border-slate-800">
+
+        <!-- 1. تبويب الأصناف ورصيد أول المدة -->
+        <div id="tab-content-items" class="space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-boxes-stacked text-blue-400"></i>
+                <span>قائمة أصناف ومخزون القسم المختار</span>
+              </h4>
+              <p class="text-[11px] text-slate-400">تعديل رصيد أول المدة وسعر البيع والتكلفة وحذف الأصناف</p>
+            </div>
+            <button onclick="openModal('add-item-modal')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition">
+              <i class="fa-solid fa-plus"></i>
+              <span>إضافة صنف لهذا القسم</span>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-800 rounded-xl">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-900 text-slate-400 border-b border-slate-800">
+                <tr>
+                  <th class="p-2.5">الكود</th>
+                  <th class="p-2.5">اسم الصنف</th>
+                  <th class="p-2.5">الوحدة</th>
+                  <th class="p-2.5">رصيد أول المدة</th>
+                  <th class="p-2.5">المتاح حالياً</th>
+                  <th class="p-2.5">سعر التكلفة</th>
+                  <th class="p-2.5">سعر البيع</th>
+                  <th class="p-2.5 text-center">إجراء</th>
+                </tr>
+              </thead>
+              <tbody id="items-table-body" class="divide-y divide-slate-850">
+                <!-- بيانات الأصناف -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. تبويب فاتورة بيع جديدة -->
+        <div id="tab-content-invoice" class="hidden space-y-4">
+          <div>
+            <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i>
+              <span>إنشاء فاتورة مبيعات جديدة لـ: <span id="inv-active-sec-name" class="text-emerald-400"></span></span>
+            </h4>
+            <p class="text-[11px] text-slate-400">يتم خصم الكمية من مخزون الصنف فوراً وزيادة رصيد خزينة القسم</p>
+          </div>
+
+          <form onsubmit="handleInvoiceSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">اختر الصنف من المخزون</label>
+              <select id="invoice-item-select" onchange="autoFillInvoicePrice()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-emerald-500"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">الكمية المباعة</label>
+              <input type="number" id="invoice-qty" value="1" min="1" oninput="calculateInvoiceTotal()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">سعر الوحدة (ج.م)</label>
+              <input type="number" id="invoice-price" value="0" min="0" oninput="calculateInvoiceTotal()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">خصم نقدي (ج.م - اختياري)</label>
+              <input type="number" id="invoice-discount" value="0" min="0" oninput="calculateInvoiceTotal()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div class="sm:col-span-2 lg:col-span-4 pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div class="text-xs">
+                إجمالي الفاتورة المطلوب تحصيله: <span id="invoice-total-display" class="text-base font-black text-emerald-400 font-mono">0 ج.م</span>
+              </div>
+              <button type="submit" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl t
