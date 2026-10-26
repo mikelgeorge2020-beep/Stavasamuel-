@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-
-<html dir="rtl" lang="ar"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!DOCTYPE html><html dir="rtl" lang="ar"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>النظام المالي والمحاسبي الموحد - كنيسة الأنبا صموئيل المعترف</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&amp;family=Noto+Sans+Arabic:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&amp;family=Noto+Sans+Arabic:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
-<link href="/manifest.json" rel="manifest"/>
-<meta content="#0f172a" name="theme-color"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link href="/manifest.json" rel="manifest">
+<meta content="#0f172a" name="theme-color">
 <style>
     body { font-family: 'Cairo', 'Noto Sans Arabic', sans-serif; background-color: #0b1120; }
     .card-hover { transition: all 0.25s ease; }
@@ -29,7 +27,7 @@
 <div class="flex items-center gap-2">
 <button class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3.5 py-1.5 rounded-lg text-xs shadow flex items-center gap-1.5 transition" onclick="downloadSelf()">
 <i class="fa-solid fa-download"></i>
-<span>تحميل ملف index.html الآن</span>
+<span class="">تحميل ملف index.html الآن</span>
 </button>
 </div>
 </div>
@@ -54,11 +52,11 @@
 <div class="flex items-center gap-2">
 <button class="hidden sm:flex bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg text-xs font-bold items-center gap-1.5 transition" onclick="downloadSelf()">
 <i class="fa-solid fa-file-arrow-down"></i>
-<span>حفظ نسخة للموبايل</span>
+<span class="">حفظ نسخة للموبايل</span>
 </button>
 <button class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 flex items-center gap-1.5 transition" onclick="toggleView('login')" title="تبديل الخادم / تسجيل الخروج">
 <i class="fa-solid fa-user-gear text-amber-400"></i>
-<span id="current-servant-name">تسجيل الدخول</span>
+<span id="current-servant-name" class="">تسجيل الدخول</span>
 </button>
 </div>
 </div>
@@ -69,38 +67,82 @@
 <!-- خلفية جمالية مدمجة -->
 <div class="absolute -top-24 -right-24 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
-<div class="text-center mb-7 relative">
+<div class="text-center mb-6 relative">
 <div class="w-16 h-16 bg-gradient-to-tr from-amber-600 via-amber-500 to-amber-300 rounded-2xl mx-auto flex items-center justify-center text-3xl text-slate-950 font-black shadow-xl shadow-amber-500/20 mb-3 border border-amber-300/40">
 <i class="fa-solid fa-cross"></i>
 </div>
 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-bold mb-2">
 <i class="fa-solid fa-shield-halved"></i>
-<span>بوابة دخول الخدام وأمناء العهد</span>
+<span class="">بوابة دخول الخدام وأمناء العهد</span>
 </div>
-<h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">تسجيل خادم / أمين عهدة</h2>
+<h2 class="text-xl sm:text-2xl font-black text-white tracking-tight" id="login-card-title">تسجيل دخول خادم</h2>
 <p class="text-xs text-slate-400 mt-1">منظومة الإدارة المالية واللوجستية الموحدة — كنيسة الأنبا صموئيل المعترف</p>
 </div>
-<form class="space-y-4 relative" onsubmit="handleLogin(event)">
+
+<!-- شريط التبديل بين تسجيل الدخول وتسجيل خادم جديد -->
+<div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center mb-6 relative">
+<button type="button" id="tab-auth-login-btn" onclick="switchAuthTab('login')" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 bg-amber-500 text-slate-950 shadow">
+<i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+<span class="">تسجيل دخول خادم</span>
+</button>
+<button type="button" id="tab-auth-register-btn" onclick="switchAuthTab('register')" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white">
+<i class="fa-solid fa-user-gear text-xs"></i>
+<span class="">تسجيل بيانات خادم جديد</span>
+</button>
+</div>
+
+<!-- نموذج تسجيل الدخول الحالي -->
+<form id="auth-login-form" class="space-y-4 relative" onsubmit="handleAuthLoginSubmit(event)">
 <div>
-<label class="block text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
+<label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
 <i class="fa-solid fa-user text-amber-400"></i>
-<span>اسم الخادم ثلاثي</span>
+<span class="">رقم الهاتف أو اسم الخادم</span>
 </label>
-<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" id="login-name" placeholder="مثال: د. ميخائيل جورج فرج" required="" type="text"/>
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" id="auth-login-identifier" placeholder="اكتب اسمك الثلاثي أو رقم الموبايل" required="" type="text">
 </div>
 <div>
-<label class="block text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
+<label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
+<i class="fa-solid fa-lock text-amber-400"></i>
+<span class="">كلمة المرور / كود الخادم السري</span>
+</label>
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition font-mono" id="auth-login-pass" placeholder="••••••••" required="" type="password">
+</div>
+<div class="pt-2">
+<button class="w-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-[0.99] transition cursor-pointer" type="submit">
+<i class="fa-solid fa-arrow-right-to-bracket text-base"></i>
+<span class="">دخول لوحة التحكم</span>
+</button>
+</div>
+<div class="text-center pt-2">
+<p class="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
+<i class="fa-solid fa-lock text-slate-600"></i>
+<span class="">جلسة آمنة ومحفوظة محلياً على هذا الجهاز بنسبة 100%</span>
+</p>
+</div>
+</form>
+
+<!-- نموذج تسجيل خادم جديد -->
+<form id="auth-register-form" class="hidden space-y-3.5 relative" onsubmit="handleAuthRegisterSubmit(event)">
+<div>
+<label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
+<i class="fa-solid fa-user text-amber-400"></i>
+<span class="">اسم الخادم ثلاثي</span>
+</label>
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" id="reg-name" placeholder="مثال: د. ميخائيل جورج فرج" required="" type="text">
+</div>
+<div>
+<label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
 <i class="fa-brands fa-whatsapp text-emerald-400"></i>
-<span>رقم الهاتف للتواصل (WhatsApp)</span>
+<span class="">رقم الهاتف للتواصل (WhatsApp)</span>
 </label>
-<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-left transition" dir="ltr" id="login-phone" placeholder="01xxxxxxxxx" required="" type="tel"/>
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-left transition font-mono" dir="ltr" id="reg-phone" placeholder="01xxxxxxxxx" required="" type="tel">
 </div>
 <div>
-<label class="block text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
+<label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
 <i class="fa-solid fa-layer-group text-blue-400"></i>
-<span>القسم المسؤول عنه أو الصلاحية</span>
+<span class="">القسم التابع له أو الصلاحية</span>
 </label>
-<select class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" id="login-sector">
+<select class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" id="reg-sector">
 <option value="library">1. مكتبة الكنيسة ومنافذ بيع الكتب</option>
 <option value="buses">2. قطاع الأتوبيسات والرحلات الديرية</option>
 <option value="farm">3. مزرعة بركة صموئيل للدواجن والبيض</option>
@@ -112,16 +154,23 @@
 <option value="all">كافة الأقسام (أمين الصندوق العام / المشرف العام)</option>
 </select>
 </div>
+<div>
+<label class="text-xs font-bold text-slate-200 mb-1.5 flex items-center gap-1.5">
+<i class="fa-solid fa-lock text-amber-400"></i>
+<span class="">كود سري / كلمة مرور لتأكيد التسجيل</span>
+</label>
+<input class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition font-mono" id="reg-pass" placeholder="اختر كوداً أو كلمة مرور" required="" type="password">
+</div>
 <div class="pt-2">
 <button class="w-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-[0.99] transition cursor-pointer" type="submit">
-<i class="fa-solid fa-arrow-right-to-bracket text-base"></i>
-<span>دخول لوحة التحكم والبدء</span>
+<i class="fa-solid fa-plus-circle text-base"></i>
+<span class="">إنشاء الحساب ودخول لوحة التحكم</span>
 </button>
 </div>
 <div class="text-center pt-2">
 <p class="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
-<i class="fa-solid fa-lock text-slate-600"></i>
-<span>جلسة آمنة محفوظة محلياً على هذا الجهاز بنسبة 100%</span>
+<i class="fa-solid fa-shield-halved text-slate-600"></i>
+<span class="">يتم حفظ بيانات الخادم محلياً وتفعيل الصلاحيات المحددة فوراً</span>
 </p>
 </div>
 </form>
@@ -161,7 +210,7 @@
 <div class="flex items-center justify-between mb-2.5">
 <h3 class="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-2">
 <i class="fa-solid fa-layer-group text-blue-400"></i>
-<span>أقسام الكنيسة الثمانية (اضغط على أي قسم لفتح لوحته وأصنافه)</span>
+<span class="">أقسام الكنيسة الثمانية (اضغط على أي قسم لفتح لوحته وأصنافه)</span>
 </h3>
 <span class="text-[11px] text-slate-400">القسم المختار يحدد العمليات بالأسفل</span>
 </div>
@@ -189,7 +238,7 @@
 <div class="flex items-center gap-2">
 <button class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow transition" onclick="openModal('add-item-modal')">
 <i class="fa-solid fa-plus-circle"></i>
-<span>إضافة صنف جديد</span>
+<span class="">إضافة صنف جديد</span>
 </button>
 </div>
 </div>
@@ -254,13 +303,13 @@
 <div>
 <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
 <i class="fa-solid fa-boxes-stacked text-blue-400"></i>
-<span>قائمة أصناف ومخزون القسم المختار</span>
+<span class="">قائمة أصناف ومخزون القسم المختار</span>
 </h4>
 <p class="text-[11px] text-slate-400">تعديل رصيد أول المدة وسعر البيع والتكلفة وحذف الأصناف</p>
 </div>
 <button class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition" onclick="openModal('add-item-modal')">
 <i class="fa-solid fa-plus"></i>
-<span>إضافة صنف لهذا القسم</span>
+<span class="">إضافة صنف لهذا القسم</span>
 </button>
 </div>
 <div class="overflow-x-auto border border-slate-800 rounded-xl">
@@ -286,7 +335,7 @@
 <div>
 <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
 <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i>
-<span>إنشاء فاتورة مبيعات جديدة لـ: <span class="text-emerald-400" id="inv-active-sec-name"></span></span>
+<span class="">إنشاء فاتورة مبيعات جديدة لـ: <span class="text-emerald-400" id="inv-active-sec-name"></span></span>
 </h4>
 <p class="text-[11px] text-slate-400">خصم الكمية من المخزون فوراً وزيادة رصيد خزينة القسم</p>
 </div>
@@ -297,15 +346,15 @@
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">الكمية المباعة</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-qty" min="1" oninput="calculateInvoiceTotal()" type="number" value="1"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-qty" min="1" oninput="calculateInvoiceTotal()" type="number" value="1">
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">سعر الوحدة (ج.م)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-price" min="0" oninput="calculateInvoiceTotal()" type="number" value="0"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-price" min="0" oninput="calculateInvoiceTotal()" type="number" value="0">
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">خصم نقدي (ج.م - اختياري)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-discount" min="0" oninput="calculateInvoiceTotal()" type="number" value="0"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-emerald-500" id="invoice-discount" min="0" oninput="calculateInvoiceTotal()" type="number" value="0">
 </div>
 <div class="sm:col-span-2 lg:col-span-4 pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
 <div class="text-xs">
@@ -313,7 +362,7 @@
 </div>
 <button class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition" type="submit">
 <i class="fa-solid fa-cloud-arrow-up"></i>
-<span>حفظ وترحيل الفاتورة والخزينة</span>
+<span class="">حفظ وترحيل الفاتورة والخزينة</span>
 </button>
 </div>
 </form>
@@ -323,7 +372,7 @@
 <div>
 <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
 <i class="fa-solid fa-cart-flatbed text-indigo-400"></i>
-<span>تسجيل توريد / إيداع بضاعة في مخزن القسم</span>
+<span class="">تسجيل توريد / إيداع بضاعة في مخزن القسم</span>
 </h4>
 <p class="text-[11px] text-slate-400">زيادة رصيد الصنف المتوفر وتحديث تكلفة الشراء</p>
 </div>
@@ -334,20 +383,20 @@
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">الكمية المضافة للمخزن</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-indigo-500" id="purchase-qty" min="1" required="" type="number" value="10"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-indigo-500" id="purchase-qty" min="1" required="" type="number" value="10">
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">سعر شراء الوحدة (التكلفة)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-indigo-500" id="purchase-cost" min="0" required="" type="number" value="50"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center focus:outline-none focus:border-indigo-500" id="purchase-cost" min="0" required="" type="number" value="50">
 </div>
 <div>
 <label class="block text-xs text-slate-300 font-semibold mb-1">اسم المورد / إذن الاستلام</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500" id="purchase-supplier" placeholder="مثال: مطبعة الدير / مورد البيض" type="text"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500" id="purchase-supplier" placeholder="مثال: مطبعة الدير / مورد البيض" type="text">
 </div>
 <div class="sm:col-span-2 lg:col-span-4 pt-3 border-t border-slate-800 flex justify-end">
 <button class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition" type="submit">
 <i class="fa-solid fa-arrow-down-to-bracket"></i>
-<span>ترحيل وإيداع في المخزن</span>
+<span class="">ترحيل وإيداع في المخزن</span>
 </button>
 </div>
 </form>
@@ -358,18 +407,18 @@
 <div>
 <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
 <i class="fa-solid fa-vault text-amber-400"></i>
-<span>كشف حساب وحركات خزينة القسم</span>
+<span class="">كشف حساب وحركات خزينة القسم</span>
 </h4>
 <p class="text-[11px] text-slate-400">سجل عمليات القبض، الفواتير، ومصروفات القسم</p>
 </div>
 <div class="flex items-center gap-2">
 <button class="bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/60 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition" onclick="promptTreasuryPayment()">
 <i class="fa-solid fa-receipt"></i>
-<span>تسجيل سند صرف / مصروف</span>
+<span class="">تسجيل سند صرف / مصروف</span>
 </button>
 <button class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition" onclick="closeTreasuryPeriod()">
 <i class="fa-solid fa-lock"></i>
-<span>تقفيل الخزينة</span>
+<span class="">تقفيل الخزينة</span>
 </button>
 </div>
 </div>
@@ -395,13 +444,13 @@
 <div>
 <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
 <i class="fa-solid fa-chart-pie text-rose-400"></i>
-<span>التقرير الختامي المجمع لكافة الأقسام الثمانية</span>
+<span class="">التقرير الختامي المجمع لكافة الأقسام الثمانية</span>
 </h4>
 <p class="text-[11px] text-slate-400">مقارنة الخزائن والمخازن لكافة أنشطة الكنيسة</p>
 </div>
 <button class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition" onclick="window.print()">
 <i class="fa-solid fa-print"></i>
-<span>طباعة التقرير</span>
+<span class="">طباعة التقرير</span>
 </button>
 </div>
 <div class="overflow-x-auto border border-slate-800 rounded-xl">
@@ -430,7 +479,7 @@
 </button>
 <div class="flex items-center gap-2 mb-4 text-amber-400 text-sm font-bold">
 <i class="fa-solid fa-boxes-packing text-lg"></i>
-<span>تسجيل صنف جديد وتحديد رصيد أول المدة</span>
+<span class="">تسجيل صنف جديد وتحديد رصيد أول المدة</span>
 </div>
 <form class="space-y-3" onsubmit="handleAddNewItem(event)">
 <div>
@@ -448,26 +497,26 @@
 </div>
 <div>
 <label class="block text-xs text-slate-300 mb-1">اسم الصنف الجديد</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-500" id="modal-item-name" placeholder="مثال: كرتونة بيض مائدة أحمر سوبر أو أجبية وسط" required="" type="text"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-500" id="modal-item-name" placeholder="مثال: كرتونة بيض مائدة أحمر سوبر أو أجبية وسط" required="" type="text">
 </div>
 <div class="grid grid-cols-2 gap-3">
 <div>
 <label class="block text-xs text-slate-300 mb-1">الوحدة</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-unit" type="text" value="قطعة"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-unit" type="text" value="قطعة">
 </div>
 <div>
 <label class="block text-xs text-slate-300 mb-1">رصيد أول المدة (الكمية)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-qty" min="0" required="" type="number" value="100"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-qty" min="0" required="" type="number" value="100">
 </div>
 </div>
 <div class="grid grid-cols-2 gap-3">
 <div>
 <label class="block text-xs text-slate-300 mb-1">سعر التكلفة (ج.م)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-cost" min="0" required="" type="number" value="45"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-cost" min="0" required="" type="number" value="45">
 </div>
 <div>
 <label class="block text-xs text-slate-300 mb-1">سعر البيع الافتراضي (ج.م)</label>
-<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-price" min="0" required="" type="number" value="65"/>
+<input class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 text-center" id="modal-item-price" min="0" required="" type="number" value="65">
 </div>
 </div>
 <button class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 mt-2 transition" type="submit">
@@ -938,4 +987,6 @@
       renderAll();
     });
   </script>
+
+
 </body></html>
